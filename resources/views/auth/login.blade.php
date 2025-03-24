@@ -1,0 +1,92 @@
+<!-- filepath: resources/views/auth/login.blade.php -->
+@extends('layouts.auth')
+@section('content')
+    <div x-init="$store.user.guestOnly()" class="w-512px">
+        <img class="mb-9" src="{{ asset('assets/icons/icon_auth.svg') }}" alt="">
+        <div class="space-y-4 mb-12">
+            <h4 class="text-4xl font-bold">Login</h4>
+            <p class="text-base">Login untuk akses akun SKY CLUB anda</p>
+            {{-- alert --}}
+            <div id="alert" class="hidden p-4 rounded-lg" role="alert"></div>
+            {{-- alert end --}}
+        </div>
+        <form id="loginForm" x-data="loginFormHandler()" @submit.prevent="submitForm" method="POST">
+            <div class="space-y-6 mb-10">
+                <div class="relative">
+                    <input type="text" name="username" placeholder="username" required
+                        class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                    <label for="username"
+                        class="absolute text-sm text-gray-500 dark:text-gray-400 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Username</label>
+                </div>
+                <div class="relative">
+                    <input type="password" name="password" placeholder="password" required
+                        class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                    <label for="password"
+                        class="absolute text-sm text-gray-500 dark:text-gray-400 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Password</label>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="remember" aria-describedby="remember" type="checkbox"
+                                class="w-4 h-4 rounded bg-gray-50">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
+                        </div>
+                    </div>
+                    <a href="{{ route('forgot-password') }}"
+                        class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot
+                        password?</a>
+                </div>
+            </div>
+            <button type="submit" class="bg-red-600 rounded py-2 font-semibold text-white w-full hover:bg-red-800">Sign in</button>
+        </form>
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400 text-center mt-4">
+            Don’t have an account <a href="/users/register"
+                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign Up</a>
+        </p>
+    </div>
+    <x-auth-carousel />
+@endsection
+
+@push('scripts')
+<script>
+    function loginFormHandler() {
+        return {
+            async submitForm() {
+                const formData = new FormData(document.getElementById('loginForm'));
+                const data = JSON.stringify(Object.fromEntries(formData.entries()));
+                console.log(data);
+                try {
+                    console.log('try');
+                    const response = await axios.post('/users/login', data, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        withCredentials: true
+                    });
+
+                    if (response.status === 200) {
+                        Alpine.store('user').setUser(response.data.data.user);
+                        Alpine.store('user').setToken(response.data.data.token);
+
+                        document.getElementById('alert').classList.remove('hidden');
+                        document.getElementById('alert').classList.add('bg-green-50', 'text-green-800');
+                        document.getElementById('alert').innerText = 'Login successful!';
+
+                    } if (response.status === 401) {
+                        document.getElementById('alert').classList.remove('hidden');
+                        document.getElementById('alert').classList.add('bg-red-50', 'text-red-800');
+                        document.getElementById('alert').innerText = response.data.message;
+                    }
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('alert').classList.remove('hidden');
+                    document.getElementById('alert').classList.add('bg-red-50', 'text-red-800');
+                    document.getElementById('alert').innerText = 'An error occurred. Please try again.';
+                }
+            }
+        }
+    }
+</script>
+@endpush
