@@ -24,7 +24,8 @@
             <h6 class="text-base mb-8 max-w-2xl font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
                 Punya rencana berolahraga minggu ini tapi belum tahu mau main di mana? Atau tidak ada waktu untuk datang
                 langsung ke venue hanya untuk booking lapangan?</h6>
-            <a href="/field-schedule" class="bg-red-600 rounded-lg px-6 py-3 font-semibold text-white hover:bg-red-800">Pesan Sekarang</a>
+            <a href="/field-schedule"
+                class="bg-red-600 rounded-lg px-6 py-3 font-semibold text-white hover:bg-red-800">Pesan Sekarang</a>
         </div>
         <div class="hidden lg:mt-0 lg:col-span-5 lg:flex place-self-end">
             <img class="rounded-3xl" src="{{ asset('assets/icons/content-2.svg') }}" alt="image-content">
@@ -120,7 +121,8 @@
                     class="text-base mb-8 max-w-2xl font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
                     SKY CLUB punya solusinya! Ikuti komunitas sparing kami dan temukan lawan tanding yang seimbang.
                     Tingkatkan skill dan nikmati pertandingan seru dengan berbagai tim di sini!</h6>
-                <a href="/sparing" class=" bg-red-600 rounded-lg px-6 py-3 font-semibold text-white hover:bg-red-800">Lihat Selengkapnya</a>
+                <a href="/sparing" class=" bg-red-600 rounded-lg px-6 py-3 font-semibold text-white hover:bg-red-800">Lihat
+                    Selengkapnya</a>
             </div>
         </div>
 
@@ -135,9 +137,8 @@
                 <!-- Previous Button -->
                 <button @click="prevSlide"
                     class="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full size-14 flex items-center justify-center shadow hover:bg-gray-100 z-10">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                        viewBox="0 0 24 24">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M5 12h14M5 12l4-4m-4 4 4 4" />
                     </svg>
@@ -264,7 +265,8 @@
             </div>
 
             <div class="flex justify-end my-10">
-                <a href="/article" type="submit" class=" bg-red-600 rounded px-4 py-2 font-semibold text-white hover:bg-red-800">Lihat
+                <a href="/article" type="submit"
+                    class=" bg-red-600 rounded px-4 py-2 font-semibold text-white hover:bg-red-800">Lihat
                     Semuanya</a>
             </div>
         </div>
