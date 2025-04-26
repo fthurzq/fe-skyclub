@@ -39,6 +39,7 @@ document.addEventListener("alpine:init", () => {
             // Remove the token from localStorage
             localStorage.removeItem("auth_token");
             localStorage.removeItem("user_data");
+            localStorage.removeItem("token_expiry");
             // Remove the Authorization header for Axios
             delete axios.defaults.headers.common["Authorization"];
         },
@@ -49,6 +50,7 @@ document.addEventListener("alpine:init", () => {
                 const cachedUser = localStorage.getItem("user_data");
                 const cachedToken = localStorage.getItem("auth_token");
                 const tokenExpiry = localStorage.getItem("token_expiry");
+                console.log(cachedUser);
 
                 if (cachedUser && cachedToken && tokenExpiry) {
                     const now = new Date().getTime();
@@ -71,12 +73,16 @@ document.addEventListener("alpine:init", () => {
                 );
                 this.authenticated = true;
                 this.setUser(response.data.data.user);
+                this.setToken(response.data.data.token);
 
-                // Simpan token expiry (misalnya, 1 jam dari sekarang)
-                const expiryTime = new Date().getTime() + 60 * 60 * 1000; // 1 jam
+                // Simpan token expiry (misalnya, 1 hari dari sekarang)
+                const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 1 hari
                 localStorage.setItem("token_expiry", expiryTime);
-                console.log(response.data.data);
+                console.log(
+                    "authCheck fetch user current " + response.data.data
+                );
             } catch (error) {
+                console.error("Error fetching user data:", error);
                 this.authenticated = false;
                 this.clearUser();
                 window.location.href = "/users/login";

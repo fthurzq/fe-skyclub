@@ -17,3 +17,6 @@ Route::get('users/reset-password', function () {
 Route::get('/', function () {
     return view('index');
 });
+Route::get('sparings', function () {
+    return view('bookings.sparing');
+})->name('sparings.index');

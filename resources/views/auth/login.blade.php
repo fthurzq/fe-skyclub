@@ -91,6 +91,10 @@
                         if (response.status === 200) {
                             Alpine.store('user').setUser(response.data.data.user);
                             Alpine.store('user').setToken(response.data.data.token);
+
+                            // set token expiry to 1 day
+                            const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 1 hari
+                            localStorage.setItem("token_expiry", expiryTime);
                             console.log("euyyss");
                             const alert = document.getElementById('alert');
                             alert.classList.remove('hidden');
