@@ -1,11 +1,11 @@
-<nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-40">
+<nav class="bg-white border-b border-gray-200 px-4 py-2.5 fixed left-0 right-0 top-0 z-40">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex justify-start items-center">
         <button
           data-drawer-target="drawer-navigation"
           data-drawer-toggle="drawer-navigation"
           aria-controls="drawer-navigation"
-          class="p-2 mr-2 text-gray-600 rounded-lg cursor-pointer md:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          class="p-2 mr-2 text-gray-600 rounded-lg cursor-pointer md:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100"
         >
           <svg
             aria-hidden="true"
@@ -46,7 +46,7 @@
       <div class="flex items-center lg:order-2">
         <div class="flex items-center space-x-3 self-center">
             <!-- Profile dropdown -->
-            <div class="relative ml-3" x-data="{ isOpen: false }" x-cloak>
+            <div class="relative ml-3" x-data="{ isOpen: false, user: $store.user }" x-init="user.authCheck()}" x-cloak>
                 <div class="flex items-center space-x-2">
                     <button type="button" @click="isOpen = !isOpen"
                         class="relative flex max-w-xs items-center rounded-full text-sm "
@@ -55,7 +55,7 @@
                         <img class="h-8 w-8 rounded-full"
                             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                             alt="">
-                        <span class="ml-2 font-semibold">{{ auth()->user()->name }}</span>
+                        <span class="ml-2 font-semibold" x-text="user.data.name"></span>
                     </button>
                 </div>
                 <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
@@ -67,19 +67,23 @@
                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                     tabindex="-1">
-                    {{-- <a href="{{ route('profileUser.show', auth()->user()->id) }}" --}}
-                    <a href="{{ route('profile.show', auth()->user()->id) }}"
-                        class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                        id="user-menu-item-0">Your Profile</a>
+                    {{-- <a href="{{ route('profileUser.show', auth()->user()->id) }}"> --}}
+                    <a :href="#" class="block px-4 py-2 text-sm text-gray-700"
+                        role="menuitem" tabindex="-1" id="user-menu-item-0" x-show="user.authenticated">Your Profile</a>
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                         tabindex="-1" id="user-menu-item-1">Settings</a>
-                    <form method="POST" action="{{ route('logout') }}">
+                    {{-- <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                             tabindex="-1" id="user-menu-item-2">Sign out</button>
+                    </form> --}} 
+                    <form method="POST" id="logout" x-data="logoutHandler()"
+                        @submit.prevent="submitLogout">
+                        <button type="submit" class="block px-4 py-2 text-sm text-gray-700"
+                            role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</button>
                     </form>
                 </div>
             </div>
-        </div>s
+        </div>
     </div>
 </nav>

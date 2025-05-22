@@ -12,7 +12,7 @@
 <body >
     @yield('alert')
 
-    <div class="antialiased bg-gray-50 dark:bg-gray-900">
+    <div class="antialiased bg-gray-50">
         @include('components.admin-navbar')
         <!-- Sidebar -->
         @include('components.sidebar')

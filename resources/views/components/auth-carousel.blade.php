@@ -1,4 +1,4 @@
-<div x-data="{ activeSlide: 0, slides: ['{{ asset('assets/images/album_1.svg') }}', '{{ asset('assets/images/album_2.svg') }}', '{{ asset('assets/images/album_3.svg') }}'] }" x-init="setInterval(() => { activeSlide = (activeSlide + 1) % slides.length }, 5000)"
+<div x-data="{ activeSlide: 0, slides: ['{{ asset('assets/images/slider/album_1.svg') }}', '{{ asset('assets/images/slider/album_2.svg') }}', '{{ asset('assets/images/slider/album_3.svg') }}'] }" x-init="setInterval(() => { activeSlide = (activeSlide + 1) % slides.length }, 5000)"
     class="relative w-2/5 min-h-[800px] bg-cover overflow-hidden container hidden lg:block :">
     {{-- <img src="{{ asset('assets/images/album_1.svg') }}" alt=""> --}}
     <p class="text-3xl" x-text="activeSlide"></p>

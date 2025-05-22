@@ -1,9 +1,9 @@
 <div x-data="{
     activeSlide: 0,
     slides: [
-        { image: '{{ Storage::url('images/slider/album_1.png') }}', title: 'Rumput Standar FIFA', text: 'Di SKY CLUB, kami menggunakan rumput sintetis berstandar FIFA yang dirancang khusus untuk mini soccer. Dengan rumput berkualitas ini, kami memastikan pengalaman bermain Anda lebih nyaman, aman, dan optimal.' },
-        { image: '{{ Storage::url('images/slider/album_2.png') }}', title: 'Fasilitas Lengkap', text: 'Di SKY CLUB, kami menyediakan fasilitas lengkap untuk mendukung kenyamanan Anda, termasuk ruang ganti modern dengan shower dan loker pribadi. Dengan fasilitas ini, Anda dapat bersiap dan bersantai dengan mudah sebelum dan sesudah bermain.' },
-        { image: '{{ Storage::url('images/slider/album_3.png') }}', title: 'Parkir Luas', text: 'SKY CLUB memiliki area parkir yang luas, kami memastikan kenyamanan dan kemudahan bagi setiap pengunjung. Anda tidak perlu khawatir mencari tempat parkir, karena area kami dirancang untuk menampung kendaraan dalam jumlah besar dengan akses yang mudah dan aman.' }
+        { image: '{{ asset('assets/images/slider/album_1.svg') }}', title: 'Rumput Standar FIFA', text: 'Di SKY CLUB, kami menggunakan rumput sintetis berstandar FIFA yang dirancang khusus untuk mini soccer. Dengan rumput berkualitas ini, kami memastikan pengalaman bermain Anda lebih nyaman, aman, dan optimal.' },
+        { image: '{{ asset('assets/images/slider/album_2.svg') }}', title: 'Fasilitas Lengkap', text: 'Di SKY CLUB, kami menyediakan fasilitas lengkap untuk mendukung kenyamanan Anda, termasuk ruang ganti modern dengan shower dan loker pribadi. Dengan fasilitas ini, Anda dapat bersiap dan bersantai dengan mudah sebelum dan sesudah bermain.' },
+        { image: '{{ asset('assets/images/slider/album_3.svg') }}', title: 'Parkir Luas', text: 'SKY CLUB memiliki area parkir yang luas, kami memastikan kenyamanan dan kemudahan bagi setiap pengunjung. Anda tidak perlu khawatir mencari tempat parkir, karena area kami dirancang untuk menampung kendaraan dalam jumlah besar dengan akses yang mudah dan aman.' }
     ],
     nextSlide() {
         this.activeSlide = (this.activeSlide + 1) % this.slides.length;

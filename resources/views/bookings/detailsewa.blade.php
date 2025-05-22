@@ -1,13 +1,50 @@
 @extends('layouts.master')
 @section('content')
-    @php
+<div x-data="fieldHandler()" x-init="fetchField()" class="grid grid-cols-3 grid-flow-col gap-1 sm:gap-2 md:gap-4 h-[270px] sm:h-[370px] md:h-[470px] lg:h-[670px]">
+    <template x-if="isLoading">
+        <div class="col-span-3 flex items-center justify-center">
+            <svg class="animate-spin h-8 w-8 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    </template>
+    
+    <template x-if="!isLoading && photos.length > 0">
+        <template x-for="(photo, index) in photos.slice(0, 3)" :key="photo.id">
+            <div>
+                <div x-show="index === 0" class="col-span-2 row-span-2 bg-cover bg-center rounded-s-3xl" 
+                    :style="'background-image: url(\'' + photo.photo + '\');'"></div>
+                
+                <div x-show="index === 1" class="bg-cover bg-center rounded-tr-3xl" 
+                    :style="'background-image: url(\'' + photo.photo + '\');'"></div>
+                
+                <div x-show="index === 2" class="relative bg-cover bg-center rounded-br-3xl" 
+                    :style="'background-image: url(\'' + photo.photo + '\');'">
+                    <button @click="gallery = true"
+                        class="absolute bottom-2 right-2 sm:bottom-5 sm:right-5 bg-red-600 rounded p-1 sm:px-4 sm:py-2 font-semibold text-white sm:text-base text-sm">
+                        Lihat Semua Foto
+                    </button>
+                </div>
+            </div>
+        </template>
+    </template>
+    
+    <template x-if="!isLoading && photos.length === 0">
+        <div class="col-span-3 flex items-center justify-center text-gray-500">
+            Tidak ada foto tersedia
+        </div>
+    </template>
+</div>
+
+{{-- @php
         $schedulesArray = json_decode(json_encode($schedules), true);
-    @endphp
+    @endphp --}}
     {{-- gallery --}}
-    <div x-data="{ gallery: false }"
-        class="grid grid-cols-3 grid-flow-col gap-1 sm:gap-2 md:gap-4 h-[270px] sm:h-[370px] md:h-[470px] lg:h-[670px]">
+    {{-- <div x-data="{ gallery: false }"
+        class="grid grid-cols-3 grid-flow-col gap-1 sm:gap-2 md:gap-4 h-[270px] sm:h-[370px] md:h-[470px] lg:h-[670px]"> --}}
         {{-- gallery --}}
-        @foreach ($fieldPhotos->take(3) as $index => $photo)
+        {{-- @foreach ($fieldPhotos->take(3) as $index => $photo)
             @if ($index == 0)
                 <div class="col-span-2 row-span-2 bg-cover rounded-s-3xl"
                     style="background-image: url('{{ $photo }}');"></div>
@@ -20,68 +57,89 @@
                         Semua Foto</button>
                 </div>
             @endif
-        @endforeach
+        @endforeach --}}
 
         {{-- modal --}}
-        <div x-show="gallery" x-cloak x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100"
-            x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform scale-100"
+        <div x-data="fieldHandler()" x-init="fetchField()">
+        <!-- Konten utama grid photos -->
+        <div class="grid grid-cols-3 grid-flow-col gap-1 sm:gap-2 md:gap-4 h-[270px] sm:h-[370px] md:h-[470px] lg:h-[670px]">
+            <!-- ... (kode grid photos yang sudah ada sebelumnya) ... -->
+            
+            <!-- Tombol Lihat Semua Foto -->
+            <div class="relative bg-cover bg-center rounded-br-3xl" 
+                :style="'background-image: url(\'' + (photos[2]?.photo || '') + '\');'">
+                <button @click="gallery = true"
+                    class="absolute bottom-2 right-2 sm:bottom-5 sm:right-5 bg-red-600 rounded p-1 sm:px-4 sm:py-2 font-semibold text-white sm:text-base text-sm">
+                    Lihat Semua Foto
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Gallery -->
+        <div x-show="gallery" x-cloak 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform scale-90" 
+            x-transition:enter-end="opacity-100 transform scale-100"
+            x-transition:leave="transition ease-in duration-300" 
+            x-transition:leave-start="opacity-100 transform scale-100"
             x-transition:leave-end="opacity-0 transform scale-90"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div @click.away="open = false"
+            
+            <div @click.away="gallery = false"
                 class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-sm xs:max-w-md sm:max-w-lg w-full">
+                
                 <div class="px-4 py-5 sm:p-6">
                     <div class="flex justify-between items-center">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Gallery</h3>
                         <button @click="gallery = false" class="text-gray-400 hover:text-gray-500">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
                     </div>
+                    
                     <div class="mt-4">
                         <!-- Carousel -->
                         <div x-data="{
                             activeSlide: 0,
-                            slides: [
-                                @foreach ($fieldPhotos as $photo)
-                                    '{{ $photo }}', @endforeach
-                            ]
+                            get slides() {
+                                return this.$parent.photos.map(photo => photo.photo);
+                            }
                         }">
                             <div class="relative">
                                 <!-- Carousel Images -->
-                                <template x-for="(slides, index) in slides" :key="index">
+                                <template x-for="(slide, index) in slides" :key="index">
                                     <div x-show="activeSlide === index"
                                         class="w-full h-64 bg-cover bg-center rounded-lg transition-all duration-500"
-                                        :style="`background-image: url('${slides}')`">
+                                        :style="`background-image: url('${slide}')`">
                                     </div>
                                 </template>
 
                                 <!-- Previous Button -->
                                 <button @click="activeSlide = activeSlide === 0 ? slides.length - 1 : activeSlide - 1"
-                                    class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full">
-                                    &#8249;
+                                    class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
                                 </button>
 
                                 <!-- Next Button -->
                                 <button @click="activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1"
-                                    class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full">
-                                    &#8250;
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
                                 </button>
 
                                 <!-- Carousel Indicators -->
-                                <div
-                                    class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center mt-4 space-x-2">
+                                <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex justify-center mt-4 space-x-2">
                                     <template x-for="(slide, index) in slides" :key="index">
                                         <button @click="activeSlide = index"
                                             :class="{
                                                 'bg-red-600 w-6': activeSlide === index,
-                                                'bg-gray-400': activeSlide !==
-                                                    index
+                                                'bg-gray-400 w-3': activeSlide !== index
                                             }"
-                                            class="w-3 h-3 rounded-full transition-colors"></button>
+                                            class="h-3 rounded-full transition-all duration-300"></button>
                                     </template>
                                 </div>
                             </div>
@@ -300,8 +358,8 @@
                             </svg>
                         </label>
                     </div>
-
                 </div>
+                
 
                 <!-- Time Slot -->
                 <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-4">
@@ -363,7 +421,7 @@
                 <p>Total Harga</p>
                 <p x-text="totalPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })"></p>
             </div>
-            <div>
+            {{-- <div>
                 <form action="{{ route('schedule.scheduleValidate') }}" method="POST">
                     @csrf
                     <template class="hidden" x-for="(item, index) in cart" :key="index">
@@ -379,7 +437,7 @@
                             class="bg-red-600 w-full text-center py-3 rounded-lg font-bold text-white hover:bg-red-800">Bayar</button>
                     </div>
                 </form>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -415,7 +473,7 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="flex items-center space-x-6 mb-8">
+                    {{-- <div class="flex items-center space-x-6 mb-8">
                         <p class=" text-gray-500 font-bold"><span
                                 class="text-black text-3xl">{{ $averageRating }}</span>/5</p>
                         <div class="flex space-x-1">
@@ -452,12 +510,12 @@
                                 <p>"{{ $review->comment }}"</p>
                             </div>
                         @endforeach
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
         {{-- testimoni --}}
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        {{-- <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
             @foreach ($reviews as $review)
                 <div class="space-y-6 sm:space-y-8 border-b-2 pb-6 sm:border-b-0 sm:pb-0">
                     <div class="flex items-center">
@@ -480,7 +538,7 @@
                     </div>
                 </div>
             @endforeach
-        </div>
+        </div> --}}
         <hr class="h-px my-8 bg-gray-400 border-0 dark:bg-gray-700">
         <div class="rounded-lg border border-gray-300">
             <div class=" grid p-6 sm:p-12 space-y-8">
@@ -496,6 +554,28 @@
         </div>
     </div>
     <script>
+        function fieldHandler() {
+            return {
+                facility: null,
+                isLoading: false,
+                error: null,
+                async fetchFacility(fieldId) {
+                    this.isLoading = true;
+                    this.error = null;
+                    try {
+                        const response = await axios.get(`http://127.0.0.1:8000/api/fields/${fieldId}`);
+                        console.log(response.data);
+                        this.facility = response.data.data; // Menyimpan data facility dari response
+                        console.log(this.facility);
+                    } catch (error) {
+                        console.error('Terjadi Kesalahan Di Server:', error);
+                        this.error = 'Gagal memuat data facility';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                }
+            }
+        }
         function calendar() {
             return {
                 currentDate: new Date(),
@@ -503,7 +583,7 @@
                 selectedDate: '',
                 timeSlots: [],
                 cart: [],
-                dataServer: @json($schedules),
+                {{--  --}}
                 dataWeekInServer: [],
                 dataDateInServer: [],
                 minDate: new Date(), // Tanggal minimum yang dapat dipilih

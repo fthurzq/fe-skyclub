@@ -18,6 +18,19 @@
                 <div class="flex">
                     <template x-if="user.authenticated">
                         <div class="flex items-center space-x-3 self-center">
+                            <!-- Balance information -->
+                            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 0C12.787 0 15.263 1.257 17.026 2.813C17.911 3.594 18.64 4.471 19.154 5.344C19.659 6.201 20 7.13 20 8C20 8.87 19.66 9.799 19.154 10.656C18.64 11.529 17.911 12.406 17.026 13.187C15.263 14.743 12.786 16 10 16C7.213 16 4.737 14.743 2.974 13.187C2.089 12.406 1.36 11.529 0.846 10.656C0.34 9.799 0 8.87 0 8C0 7.13 0.34 6.201 0.846 5.344C1.36 4.471 2.089 3.594 2.974 2.813C4.737 1.257 7.214 0 10 0ZM10 2C7.816 2 5.792 2.993 4.298 4.312C3.554 4.968 2.966 5.685 2.569 6.359C2.163 7.049 2 7.62 2 8C2 8.38 2.163 8.951 2.569 9.641C2.966 10.315 3.554 11.031 4.298 11.688C5.792 13.007 7.816 14 10 14C12.184 14 14.208 13.007 15.702 11.688C16.446 11.031 17.034 10.315 17.431 9.641C17.837 8.951 18 8.38 18 8C18 7.62 17.837 7.049 17.431 6.359C17.034 5.685 16.446 4.969 15.702 4.312C14.208 2.993 12.184 2 10 2ZM10 5C10.088 5 10.175 5.00367 10.261 5.011C10.0439 5.39185 9.95792 5.8335 10.0163 6.26798C10.0747 6.70246 10.2743 7.10572 10.5843 7.41571C10.8943 7.7257 11.2975 7.92525 11.732 7.98366C12.1665 8.04208 12.6081 7.95611 12.989 7.739C13.0416 8.34117 12.911 8.94518 12.6145 9.47189C12.3179 9.9986 11.8692 10.4234 11.327 10.6907C10.7849 10.958 10.1746 11.0553 9.57622 10.9699C8.97784 10.8844 8.41922 10.6202 7.97357 10.2118C7.52792 9.80343 7.21603 9.26995 7.07876 8.68129C6.94149 8.09262 6.98524 7.47621 7.20429 6.91284C7.42334 6.34946 7.80746 5.8654 8.30633 5.52407C8.8052 5.18274 9.39554 5.00008 10 5Z" fill="black"/>
+                            </svg>
+                            <span class="font-semibold">Rp 1.000.000</span>
+                            <a href="/wallet" class="relative flex items-center rounded-full p-1 text-black focus:outline-none">
+                                <svg class="h-5 w-5 stroke-2 hover:text-red-600" viewBox="0 0 23 24" fill="none" stroke-width="1.5" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18.0625 6.75V2.8125C18.0625 2.4644 17.9242 2.13056 17.6781 1.88442C17.4319 1.63828 17.0981 1.5 16.75 1.5H3.625C2.92881 1.5 2.26113 1.77656 1.76884 2.26884C1.27656 2.76113 1 3.42881 1 4.125M1 4.125C1 4.82119 1.27656 5.48887 1.76884 5.98116C2.26113 6.47344 2.92881 6.75 3.625 6.75H19.375C19.7231 6.75 20.0569 6.88828 20.3031 7.13442C20.5492 7.38056 20.6875 7.7144 20.6875 8.0625V12M1 4.125V19.875C1 20.5712 1.27656 21.2389 1.76884 21.7312C2.26113 22.2234 2.92881 22.5 3.625 22.5H19.375C19.7231 22.5 20.0569 22.3617 20.3031 22.1156C20.5492 21.8694 20.6875 21.5356 20.6875 21.1875V17.25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M22 12V17.25H16.75C16.0538 17.25 15.3861 16.9734 14.8938 16.4812C14.4016 15.9889 14.125 15.3212 14.125 14.625C14.125 13.9288 14.4016 13.2611 14.8938 12.7688C15.3861 12.2766 16.0538 12 16.75 12H22Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+
+                            <!-- Notifocation -->
                             <a href="/notification" class="relative rounded-full p-1 text-black focus:outline-none">
                                 <span class="sr-only">View notifications</span>
                                 <svg class="h-6 w-6 hover:text-red-600" fill="none" viewBox="0 0 24 24"
@@ -50,7 +63,7 @@
                                             :src="user.data.profile_photo ?? '/assets/icons/profile.png'"
                                             alt="">
                                         <span class="ml-2 font-semibold hover:text-red-600"
-                                            x-text="user.data.name">auth()->user()->name</span>
+                                            x-text="user.data.name"></span>
                                     </button>
                                 </div>
                                 <div x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform"
@@ -62,8 +75,17 @@
                                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                     tabindex="-1">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
-                                        tabindex="-1" id="user-menu-item-0">Your Profile</a>
+                    
+                                    {{-- <a :href="user.authenticated ? (user.data.is_admin ? '/admin/profile' : '/users/profile-user') : '#'" 
+                                        class="block px-4 py-2 text-sm text-gray-700"
+                                        role="menuitem" 
+                                        tabindex="-1" 
+                                        id="user-menu-item-0"
+                                        x-show="user.authenticated">Your profile</a> --}}
+                                    
+                                    <a :href="/admin/" class="block px-4 py-2 text-sm text-gray-700"
+                                        role="menuitem" tabindex="-1" id="user-menu-item-0" x-show="user.authenticated">Your Profile</a>
+
                                     <form method="POST" id="logout" x-data="logoutHandler()"
                                         @submit.prevent="submitLogout">
                                         <button type="submit" class="block px-4 py-2 text-sm text-gray-700"

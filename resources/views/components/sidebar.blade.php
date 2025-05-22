@@ -1,11 +1,11 @@
 <aside
-    class="fixed top-1w left-0 z-50 md:z-30 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-1w left-0 z-50 md:z-30 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0"
     aria-label="Sidenav" id="drawer-navigation">
-    <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800 custom-scrollbar mt-4">
+    <div class="overflow-y-auto py-5 px-3 h-full bg-white custom-scrollbar mt-4">
         <a href="/" class="md:hidden flex items-center justify-between mb-6 ml-3">
             <img src="{{ asset('assets/icons/logo.svg') }}" alt="Sky Club" class="mr-3" />
         </a>
-        <ul class="space-y-2 pb-5 border-b border-gray-200 dark:border-gray-700">
+        <ul class="space-y-2 pb-5 border-b border-gray-200">
             <li>
                 <a href="{{ route('admin.index') }}"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-rose-100 hover:ring-red-600 hover:ring-1 {{ request()->routeIs('admin.index') ? 'bg-rose-100 ring-red-600 ring-1' : '' }} group">
@@ -49,18 +49,30 @@
                 </button>
                 <ul id="dropdown-pages" class="hidden py-2 space-y-2">
                     <li>
-                        <a href="{{ route('field.photo') }}"
+                        {{-- <a href="{{ route('field.photo') }}"
+                           class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ">
+                           <span
+                               class="text-gray-500 group-hover:text-red-600 {{ request()->routeIs('field.photo') ? 'text-red-600' : '' }}">Foto
+                               Lapangan</span></a> --}} 
+                        <a href="#"
                             class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ">
                             <span
-                                class="text-gray-500 group-hover:text-red-600 {{ request()->routeIs('field.photo') ? 'text-red-600' : '' }}">Foto
+                                class="text-gray-500 group-hover:text-red-600">Foto
                                 Lapangan</span>
                         </a>
                     </li>
                     <li>
+                        {{-- 
                         <a href="{{ route('field.description') }}"
                             class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ">
                             <span
                                 class="text-gray-500 group-hover:text-red-600 {{ request()->routeIs('field.description') ? 'text-red-600' : '' }}">Deskripsi</span>
+                        </a>
+                            --}} 
+                        <a href="#"
+                            class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ">
+                            <span
+                                class="text-gray-500 group-hover:text-red-600">Deskripsi</span>
                         </a>
                     </li>
                 </ul>
@@ -96,14 +108,20 @@
                             {{-- Daftar Semua Pesanan --}}
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('admin.booking') }}"
                             class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                             <span
                                 class="text-gray-500 group-hover:text-red-600 {{ request()->routeIs('admin.booking') ? 'text-red-600' : '' }}">Persetujuan
                                 Pesanan</span>
                         </a>
-                    </li>
+                        <a href="{{ route('admin.booking') }}"
+                            class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            <span
+                                class="text-gray-500 group-hover:text-red-600 {{ request()->routeIs('admin.booking') ? 'text-red-600' : '' }}">Persetujuan
+                                Pesanan</span>
+                        </a>
+                    </li> --}} 
                     <li>
                         <a href="{{ route('admin.reschedule') }}"
                             class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -128,7 +146,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('admin.article') }}"
+                {{-- <a href="{{ route('admin.article') }}"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-rose-100 hover:ring-red-600 hover:ring-1 {{ request()->routeIs('admin.article') ? 'bg-rose-100 ring-red-600 ring-1' : '' }} group">
                     <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75  group-hover:text-red-600 {{ request()->routeIs('admin.article') ? 'text-red-600' : '' }}"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -139,9 +157,21 @@
                     </svg>
                     <span
                         class="ml-3 text-gray-500 group-hover:text-red-600 {{ request()->routeIs('admin.article') ? 'text-red-600' : '' }}">Artikel</span>
+                </a> --}}
+                <a href="#"
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-rose-100 hover:ring-red-600 hover:ring-1 group">
+                    <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75  group-hover:text-red-600"
+                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd"
+                            d="M9 2.221V7H4.221a2 2 0 0 1 .365-.5L8.5 2.586A2 2 0 0 1 9 2.22ZM11 2v5a2 2 0 0 1-2 2H4v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-7ZM8 16a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1Zm1-5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span
+                        class="ml-3 text-gray-500 group-hover:text-red-600">Artikel</span>
                 </a>
             </li>
-            <li>
+            {{-- <li>
                 <a href="{{ route('admin.voucher') }}"
                     class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-rose-100 hover:ring-red-600 hover:ring-1 {{ request()->routeIs('admin.voucher') ? 'bg-rose-100 ring-red-600 ring-1' : '' }} group ">
                     <svg class="flex-shrink-0 w-6 h-6 fill-gray-500 transition duration-75  group-hover:fill-red-600 {{ request()->routeIs('admin.voucher') ? 'fill-red-600' : '' }}"
@@ -156,7 +186,7 @@
                     <span
                         class="ml-3 text-gray-500 group-hover:text-red-600 {{ request()->routeIs('admin.voucher') ? 'text-red-600' : '' }}">Voucher</span>
                 </a>
-            </li>
+            </li> --}}
         </ul>
         {{-- <ul class="mt-5 space-y-2">
             <li>

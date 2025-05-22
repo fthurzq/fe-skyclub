@@ -23,169 +23,219 @@
         </div>
     </div>
 
-    {{-- profile --}}
-    <div class="mt-8 flex flex-col items-center space-y-2">
-        <h5 class=" text-2xl font-semibold">{{ $data_user->name }}</h5>
-        <p class="text-base text-gray-700">{{ $data_user->email }}</p>
+    <div class="mt-8 flex flex-col items-center space-y-2" x-data="userProfile()" x-init="fetchUserData()">
+        <!-- Profile Section -->
+        <template x-if="loading">
+            <div class="animate-pulse">
+                <div class="h-8 w-48 bg-gray-200 rounded"></div>
+                <div class="h-6 w-64 bg-gray-200 rounded mt-2"></div>
+            </div>
+        </template>
+        
+        <template x-if="!loading && user">
+            <div>
+                <h5 class="text-2xl font-semibold" x-text="user.name"></h5>
+                <p class="text-base text-gray-700" x-text="user.email"></p>
+            </div>
+        </template>
+        
+        <template x-if="error">
+            <div class="text-red-500" x-text="error"></div>
+        </template>
+
+        {{-- tab --}}
+        <div x-data="{ activeTab: 'account', activeBookingTab: 'Dashboard', activeBookingTab: 'field' }" class="w-full">
+            <!-- Tab Menu for Account and History -->
+            <div class="mt-8 pt-4 px-6 shadow bg-white rounded-lg">
+                <div class="grid grid-cols-3 -mb-px text-sm font-semibold" role="tablist">
+                    <div class="text-center py-4"
+                        :class="{ 'text-red-600 border-b-4 border-black': activeTab === 'account' }">
+                        <button @click="activeTab = 'account'" class="inline-block">Account</button>
+                    </div>
+                    <div class="text-center py-4"
+                        :class="{ 'text-red-600 border-b-4 border-black': activeTab === 'dashboard' }">
+                        <button @click="activeTab = 'dashboard'" class="inline-block">Dashboard</button>
+                    </div>
+                    <div class="text-center py-4"
+                        :class="{ 'text-red-600 border-b-4 border-black': activeTab === 'history' }">
+                        <button @click="activeTab = 'history'" class="inline-block">History</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Tab Content -->
+            <div x-show="activeTab === 'account'" class="mt-10">
+                <h2 class="font-bold text-3xl mb-4">Account</h2>
+                <div class="px-6 py-8 rounded-lg bg-gray-200 space-y-8">
+                    <!-- Loading State -->
+                    <template x-if="loading">
+                        <div class="space-y-6">
+                            <div x-repeat="6" class="flex justify-between items-center">
+                                <div class="space-y-2">
+                                    <div class="h-4 w-24 bg-gray-300 rounded"></div>
+                                    <div class="h-6 w-48 bg-gray-300 rounded"></div>
+                                </div>
+                                <div class="h-10 w-32 bg-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Error State -->
+                    <template x-if="error">
+                        <div class="text-red-500 text-center py-8" x-text="error"></div>
+                    </template>
+
+                    <!-- User Data -->
+                    <template x-if="!loading && user">
+                        <div>
+                            <!-- Name -->
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p>Name</p>
+                                    <p class="font-semibold text-xl" x-text="user.name"></p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1 text"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="flex justify-between items-center">
+                                <div class="space-y2">
+                                    <p class="">Email</p>
+                                    <p class="font-semibold text-xl" x-text="user.email"></p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                            
+                            <!-- Password -->
+                            <div class="flex justify-between items-center">
+                                <div class="space-y2">
+                                    <p class="">Password</p>
+                                    <p class="font-semibold text-xl">************</p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                            
+                            <!-- Phone Number -->
+                            <div class="flex justify-between items-center">
+                                <div class="space-y2">
+                                    <p class="">Phone number</p>
+                                    <p class="font-semibold text-xl" x-text="user.no_telp || '-'"></p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                            
+                            <!-- Address -->
+                            <div class="flex justify-between items-center">
+                                <div class="space-y2">
+                                    <p class="">Address</p>
+                                    <p class="font-semibold text-xl" x-text="user.address || '-'"></p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                            
+                            <!-- Date of Birth -->
+                            <div class="flex justify-between items-center">
+                                <div class="space-y2">
+                                    <p class="">Date of birth</p>
+                                    <p class="font-semibold text-xl" x-text="user.date_of_birth || '-'"></p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                            
+                            <!-- Team Name -->
+                            <div class="flex justify-between items-center">
+                                <div class="space-y2">
+                                    <p class="">Nama Tim</p>
+                                    <p class="font-semibold text-xl" x-text="user.team || '-'"></p>
+                                </div>
+                                <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
+                                    href="/">
+                                    <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
+                                    <p>Change</p>
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
     </div>
 
-    {{-- tab --}}
-    <div x-data="{ activeTab: 'account', activeBookingTab: 'Dashboard', activeBookingTab: 'field' }">
-        <!-- Tab Menu for Account and History -->
+    <!-- History Tab Content -->
+    <div x-show="activeTab === 'history'" class="mt-10">
+        <h2 class="font-bold text-3xl mb-4">Bookings</h2>
+
+        <!-- Tab Menu for Bookings -->
         <div class="mt-8 pt-4 px-6 shadow bg-white rounded-lg">
-            <div class="grid grid-cols-3 -mb-px text-sm font-semibold" role="tablist">
-                <div class="text-center py-4"
-                    :class="{ 'text-red-600 border-b-4 border-black': activeTab === 'account' }">
-                    <button @click="activeTab = 'account'" class="inline-block">Account</button>
+            <div class="flex justify-evenly flex-wrap -mb-px text-sm font-semibold" role="tablist">
+                <div class="text-center p-40 py-4"
+                    :class="{ 'text-red-600 border-b-4 border-black': activeBookingTab === 'field' }">
+                    <button @click="activeBookingTab = 'field'" class="inline-block">Lapangan</button>
                 </div>
-                {{-- <div class="border-l border-gray-400 h-7 my-auto"></div> --}}
-                <div class="text-center py-4"
-                    :class="{ 'text-red-600 border-b-4 border-black': activeTab === 'dashboard' }">
-                    <button @click="activeTab = 'dashboard'" class="inline-block">Dashboard</button>
+                <div class="border-l border-gray-400 h-7 my-auto"></div>
+                <div class="text-center p-40 py-4"
+                :class="{ 'text-red-600 border-b-4 border-black': activeBookingTab === 'sparing' }">
+                    <button @click="activeBookingTab = 'sparing'" class="inline-block">Sparing</button>
                 </div>
-                <div class="text-center py-4"
-                    :class="{ 'text-red-600 border-b-4 border-black': activeTab === 'history' }">
-                    <button @click="activeTab = 'history'" class="inline-block">History</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Account Tab Content -->
-        <div x-show="activeTab === 'account'" class="mt-10">
-            <h2 class="font-bold text-3xl mb-4">Account</h2>
-            <div class="px-6 py-8 rounded-lg bg-gray-200 space-y-8">
-                <!-- Account Details -->
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p>Name</p>
-                        <p class="font-semibold text-xl">{{ $data_user->name }}</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1 text"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="space-y2">
-                        <p class="">Email</p>
-                        <p class=" font-semibold text-xl">{{ $data_user->email }}</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="space-y2">
-                        <p class="">Password</p>
-                        <p class=" font-semibold text-xl">************</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="space-y2">
-                        <p class="">Phone number</p>
-                        <p class=" font-semibold text-xl">{{ $data_user->no_telp }}</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="space-y2">
-                        <p class="">Address</p>
-                        <p class=" font-semibold text-xl">{{ $data_user->address }}</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="space-y2">
-                        <p class="">Date of birth</p>
-                        <p class=" font-semibold text-xl">{{ $data_user->date_of_birth }}</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div class="space-y2">
-                        <p class="">Nama Tim</p>
-                        <p class=" font-semibold text-xl">{{ $data_user->team }}</p>
-                    </div>
-                    <a class="px-6 border-2 border-red-500 self-stretch items-center flex rounded-lg space-x-1"
-                        href="/">
-                        <img src="{{ asset('assets/icons/icon-change.svg') }}" alt="">
-                        <p>Change</p>
-                    </a>
+                <div class="border-l border-gray-400 h-7 my-auto"></div>
+                <div class="text-center p-40 py-4"
+                    :class="{ 'text-red-600 border-b-4 border-black': activeBookingTab === 'finish' }">
+                    <button @click="activeBookingTab = 'finish'" class="inline-block">Selesai</button>
                 </div>
             </div>
         </div>
 
-        <!-- History Tab Content -->
-        <div x-show="activeTab === 'history'" class="mt-10">
-            <h2 class="font-bold text-3xl mb-4">Bookings</h2>
-
-            <!-- Tab Menu for Bookings -->
-            <div class="mt-8 pt-4 px-6 shadow bg-white rounded-lg">
-                <div class="flex justify-evenly flex-wrap -mb-px text-sm font-semibold" role="tablist">
-                    <div class="text-center p-40 py-4"
-                        :class="{ 'text-red-600 border-b-4 border-black': activeBookingTab === 'field' }">
-                        <button @click="activeBookingTab = 'field'" class="inline-block">Lapangan</button>
-                    </div>
-                    <div class="border-l border-gray-400 h-7 my-auto"></div>
-                    <div class="text-center p-40 py-4"
-                        :class="{ 'text-red-600 border-b-4 border-black': activeBookingTab === 'sparing' }">
-                        <button @click="activeBookingTab = 'sparing'" class="inline-block">Sparing</button>
-                    </div>
-                    <div class="border-l border-gray-400 h-7 my-auto"></div>
-                    <div class="text-center p-40 py-4"
-                        :class="{ 'text-red-600 border-b-4 border-black': activeBookingTab === 'finish' }">
-                        <button @click="activeBookingTab = 'finish'" class="inline-block">Selesai</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Booking Tab Contents -->
-            <div x-show="activeBookingTab === 'field'" class="mt-8 space-y-10">
-                @forelse ($bookings as $booking)
-                    @foreach ($booking->listBooking as $sesi)
-                        <x-drop-booking :booking="$booking" :sesi="$sesi" />
-                    @endforeach
-                @empty
-                    <p>Tidak ada jadwal yang telah dipesan</p>
-                @endforelse
-            </div>
-            <div x-show="activeBookingTab === 'sparing'" class="mt-8 space-y-10">
-                @for ($x = 0; $x < 3; $x++)
-                    <x-drop-sparing />
-                @endfor
-            </div>
-            <div x-show="activeBookingTab === 'finish'" class="mt-8 space-y-10">
-                @for ($x = 0; $x < 2; $x++)
-                    <x-drop-history-booking />
-                @endfor
-                @for ($x = 0; $x < 2; $x++)
-                    <x-drop-history-sparing />
-                @endfor
-            </div>
+        <!-- Booking Tab Contents -->
+        <div x-show="activeBookingTab === 'field'" class="mt-8 space-y-10">
+            @forelse ($bookings as $booking)
+                @foreach ($booking->listBooking as $sesi)
+                    <x-drop-booking :booking="$booking" :sesi="$sesi" />
+                @endforeach
+            @empty
+                <p>Tidak ada jadwal yang telah dipesan</p>
+            @endforelse
         </div>
+        <div x-show="activeBookingTab === 'sparing'" class="mt-8 space-y-10">
+            @for ($x = 0; $x < 3; $x++)
+                <x-drop-sparing />
+            @endfor
+        </div>
+        <div x-show="activeBookingTab === 'finish'" class="mt-8 space-y-10">
+            @for ($x = 0; $x < 2; $x++)
+                <x-drop-history-booking />
+            @endfor
+            @for ($x = 0; $x < 2; $x++)
+                <x-drop-history-sparing />
+            @endfor
+        </div>
+    </div>
 
 
-        <!-- Dashboard Tab Content -->
+    <!-- Dashboard Tab Content -->
     <div x-show="activeTab === 'dashboard'" class="mt-10">
         <h2 class="font-bold text-3xl mb-4">Dashboard</h2>
 
@@ -198,7 +248,7 @@
                 </div>
                 <div class="border-l border-gray-400 h-7 my-auto"></div>
                 <div class="text-center p-40 py-4"
-                    :class="{ 'text-red-600 border-b-4 border-black': activeDashboardTab === 'fiturTambahan' }">
+                :class="{ 'text-red-600 border-b-4 border-black': activeDashboardTab === 'fiturTambahan' }">
                     <button @click="activeDashboardTab = 'fiturTambahan'" class="inline-block">Fitur Tambahan</button>
                 </div>
                 <div class="border-l border-gray-400 h-7 my-auto"></div>
@@ -235,8 +285,40 @@
     </div>
 
 </div>
-
-
-
-
 @endsection
+
+@push('script')
+<script>
+    function userProfile() {
+    return {
+        user: null,
+        loading: true,
+        error: null,
+        
+        fetchUserData() {
+            this.loading = true;
+            this.error = null;
+            
+            axios.get('http://127.0.0.1:8000/api/users/current', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    // Add authorization header if needed
+                    // 'Authorization': 'Bearer ' + yourAuthToken
+                }
+            })
+            .then(response => {
+                this.user = response.data.data;
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                this.error = 'Gagal memuat data pengguna. Silakan coba lagi.';
+            })
+            .finally(() => {
+                this.loading = false;
+            });
+        }
+    }
+}
+</script>
+@endpush

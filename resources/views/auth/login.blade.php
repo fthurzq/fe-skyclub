@@ -1,7 +1,7 @@
 <!-- filepath: resources/views/auth/login.blade.php -->
 @extends('layouts.auth')
 @section('content')
-    <div x-init="$store.user.guestOnly()" class="w-512px">
+    <div x-init="$store.user.guestOnly()" class="w-[512px]">
         <img class="mb-9" src="{{ asset('assets/icons/icon_auth.svg') }}" alt="">
         <div class="space-y-4 mb-12">
             <h4 class="text-4xl font-bold">Login</h4>
@@ -21,17 +21,25 @@
                     <label for="username"
                         class="absolute text-sm text-gray-500 dark:text-gray-400 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500">Username</label>
                     <p x-text="errors.username?.[0]" x-show="errors.username"
-                        class="mt-2 text-sm text-red-600 dark:text-red-500">
+                        class="mt-2 text-sm text-red-600">
                     </p>
                 </div>
-                <div class="relative">
-                    <input type="password" name="password" placeholder="password"
+                <div x-data="{ showPassword: false }" class="relative">
+                    <input :type="showPassword ? 'text' : 'password'" 
+                        name="password" 
+                        placeholder="password"
                         :class="errors.password ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500' :
                             'border-gray-300 focus:border-blue-600 focus:ring-blue-500'"
                         class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 peer"
                         required />
                     <label for="password"
                         class="absolute text-sm text-gray-500 dark:text-gray-400 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500">Password</label>
+                    <span 
+                        class="absolute inset-y-0 right-0 flex items-center px-3 cursor-pointer"
+                        @click="showPassword = !showPassword">
+                        <img x-show="!showPassword" class="mx-auto" src="{{ asset('assets/icons/password-eye-off.svg') }}" alt="">
+                        <img x-show="showPassword" class="mx-auto" src="{{ asset('assets/icons/password-eye.svg') }}" alt="">
+                    </span>
                     <p x-text="errors.password?.[0]" x-show="errors.password"
                         class="mt-2 text-sm text-red-600 dark:text-red-500">
                     </p>

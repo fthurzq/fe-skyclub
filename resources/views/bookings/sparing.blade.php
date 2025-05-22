@@ -68,7 +68,7 @@
 
         {{-- Data Not Found --}}
         <template x-if="sparings.length === 0">
-            <p x-show="!isLoading" class="text-center text-lg">Tidak ada sparing yang tersedia</p>
+            <p x-show="!isLoading" class="text-lg">Tidak ada sparing yang tersedia</p>
 
         </template>
 
@@ -137,7 +137,7 @@
 
     <!-- Sparing Modal -->
     <button data-modal-target="popup-modal" data-modal-toggle="popup-modal"
-        class=" hidden block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class=" hidden block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         type="button">
         Toggle modal
     </button>
@@ -147,7 +147,7 @@
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <button type="button"
-                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                         data-modal-hide="popup-modal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
