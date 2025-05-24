@@ -36,6 +36,15 @@ Route::get('field-schedule', function () {
     return view('bookings.detailsewa');
 })->name('schedule.index');
 
+// payment
+Route::get('payment/{id}', function () {
+    return view('payments.detailPembayaran');
+})->name('payment.index');
+
+Route::get('payment/success', function () {
+    return view('payments.pembayaranBerhasil');
+})->name('payment.success');
+
 // Article
 Route::get('articles', function () {
     return view('articles.userIndex');
@@ -49,7 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.index');
     })->name('index');
-    
+
     // Profile
     Route::get('/profile', function () {
         return view('profiles.profileAdmin');
