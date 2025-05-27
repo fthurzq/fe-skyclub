@@ -11,12 +11,10 @@ class DropBooking extends Component
     /**
      * Create a new component instance.
      */
-    public $booking;
-    public $sesi;
-    public function __construct($booking, $sesi)
+
+    public function __construct()
     {
-        $this->booking = $booking;
-        $this->sesi = $sesi;
+       
     }
 
     /**

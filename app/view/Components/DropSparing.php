@@ -11,10 +11,10 @@ class DropSparing extends Component
     /**
      * Create a new component instance.
      */
-    public $req_sparing;
-    public function __construct($sparing)
+
+    public function __construct()
     {
-        $this->req_sparing = $sparing;
+        
     }
 
     /**

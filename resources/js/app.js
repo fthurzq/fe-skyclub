@@ -54,16 +54,42 @@ document.addEventListener("alpine:init", () => {
             localStorage.removeItem("token_expiry");
             // Remove the Authorization header for Axios
             delete axios.defaults.headers.common["Authorization"];
-            window.location.href = "users/login";
         },
         errorHandler(error) {
             if (error.response) {
                 switch (error.response.status) {
                     case 401:
                         // Handle unauthorized access
-                        this.unauthenticate();
+                        this.clearUser();
                         break;
                 }
+            }
+        },
+        async refreshLocalStorage() {
+            try {
+                console.log("Refreshing localStorage...");
+                // Hapus data lama
+
+                localStorage.removeItem("user_data");
+
+                // Ambil data user & token baru dari API
+                const response = await axios.get(
+                    "http://localhost:8000/api/users/current"
+                );
+                console.log("API response received:", response.data);
+                const user = response.data.data;
+                console.log("User data fetched:", user);
+
+                // Simpan ke localStorage
+                localStorage.setItem("user_data", JSON.stringify(user));
+
+                console.log("localStorage refreshed successfully");
+                // Update Alpine store
+                this.setUser(user);
+                this.authenticated = true;
+            } catch (error) {
+                console.error("Error refreshing localStorage:", error);
+                this.clearUser();
             }
         },
         async authCheck() {
@@ -97,7 +123,7 @@ document.addEventListener("alpine:init", () => {
                 const expiryTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 1 hari
                 localStorage.setItem("token_expiry", expiryTime);
             } catch (error) {
-                this.unauthenticate();
+                this.clearUser();
             }
         },
 

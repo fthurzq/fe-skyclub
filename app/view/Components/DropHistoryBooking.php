@@ -11,10 +11,10 @@ class DropHistoryBooking extends Component
     /**
      * Create a new component instance.
      */
-    public $list_booking;
-    public function __construct($listbooking)
+
+    public function __construct()
     {
-        $this->list_booking = $listbooking;
+
     }
 
     /**

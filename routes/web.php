@@ -28,19 +28,24 @@ Route::get('users/reset-password', function () {
 
 
 // Sparing
-Route::get('sparings', function () {
+Route::get('sparing', function () {
     return view('bookings.sparing');
 })->name('sparings.index');
 
+// jadwal lapangan
 Route::get('field-schedule', function () {
     return view('bookings.detailsewa');
 })->name('schedule.index');
+
+// reschedule
+Route::get('reschedule/{id}', function () {
+    return view('bookings.reschedule');
+})->name('reschedule');
 
 // payment
 Route::get('payment/{id}', function () {
     return view('payments.detailPembayaran');
 })->name('payment.index');
-
 Route::get('payment/success', function () {
     return view('payments.pembayaranBerhasil');
 })->name('payment.success');
@@ -49,7 +54,6 @@ Route::get('payment/success', function () {
 Route::get('articles', function () {
     return view('articles.userIndex');
 })->name('article.index');
-// routes/web.php
 Route::view('/article/{id}', 'app')->where('id', '[0-9]+');
 
 // Admin

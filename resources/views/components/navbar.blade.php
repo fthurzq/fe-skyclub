@@ -52,15 +52,7 @@
                                     class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                                     0?
                                 </span>
-                                {{-- @php
-                                    $unreadNotificationsCount = Auth::user()->unreadNotifications->count();
-                                @endphp
-                                @if ($unreadNotificationsCount > 0)
-                                    <span
-                                        class="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                                        {{ $unreadNotificationsCount }}
-                                    </span>
-                                @endif --}}
+
                             </a>
                             <!-- Profile dropdown -->
                             <div class="relative ml-3 border-s-2 pl-3 border-red-600" x-data="{ isOpen: false }">
@@ -70,7 +62,7 @@
                                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span class="sr-only">Open user menu</span>
                                         <img class="h-8 w-8 rounded-full"
-                                            :src="user.data.profile_photo ?? '/assets/icons/profile.png'"
+                                            :src="`http://127.0.0.1:8000/storage/${user.data.profile_photo}`"
                                             alt="">
                                         <span class="ml-2 font-semibold hover:text-red-600"
                                             x-text="user.data.name"></span>
@@ -86,19 +78,14 @@
                                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                                     tabindex="-1">
 
-                                    {{-- <a :href="user.authenticated ? (user.data.is_admin ? '/admin/profile' : '/users/profile-user') : '#'"
-                                        class="block px-4 py-2 text-sm text-gray-700"
-                                        role="menuitem"
-                                        tabindex="-1"
-                                        id="user-menu-item-0"
-                                        x-show="user.authenticated">Your profile</a> --}}
+                                    <a :href="user.data.role == 'admin' ? '/admin' : '/users/profile-user'"
+                                        class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                        id="user-menu-item-0" x-show="user.authenticated">Your Profile</a>
 
-                                    <a :href="/admin/" class="block px-4 py-2 text-sm text-gray-700"
-                                        role="menuitem" tabindex="-1" id="user-menu-item-0"
-                                        x-show="user.authenticated">Your Profile</a>
+
 
                                     <form method="POST" id="logout" x-data="logoutHandler()"
-                                        @submit.prevent="submitLogout">
+                                        @submit.prevent="$store.user.clearUser(); window.location.href = '/'">
                                         <button type="submit" class="block px-4 py-2 text-sm text-gray-700"
                                             role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</button>
                                     </form>

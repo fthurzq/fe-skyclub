@@ -133,9 +133,8 @@
                 <div class=" space-y-1">
                     <h1 class="text-4xl font-bold" x-text="field.name">SKY CLUB MINI SOCCER</h1>
                     <div class="flex space-x-1">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                            viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 text-gray-800 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -146,8 +145,8 @@
                     <div class="flex">
                         <div class="flex items-center border rounded-lg px-2.5">
                             <p class="text-sm font-bold text-gray-900" x-text="field.review.average">average rating</p>
-                            {{-- <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $averageRating }}</p> --}}
-                            <svg class="ms-1 w-4 h-4 text-yellow-300" aria-hidden="true"
+                            <svg class="ms-1
+                                w-4 h-4 text-yellow-300" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                                 <path
                                     d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
@@ -157,6 +156,9 @@
                             x-text="field.review.average >= 5 ? 'Sangat Baik' : field.review.average >= 4 ? 'Baik' : field.review.average >= 3 ? 'Cukup Baik' : field.review.average >= 2 ? 'Buruk' : 'Sangat Buruk'">
                         </p>
                         <p class="font-medium mt-1" x-text="` | ${field.review.count} reviews`"></p>
+                        {{-- <p class="p-2.5 text-sm font-medium"><span class=" font-bold">Very
+                                Good - </span>countRating reviews</p> --}}
+                        {{-- Good - </span>{{ $countRating }} reviews</p> --}}
                     </div>
                 </div>
                 <hr class="h-px my-8 bg-gray-400 border-0 dark:bg-gray-700">
@@ -369,7 +371,7 @@
 
                     <div class="flex justify-between gap-2 xl:hidden">
                         <button type="submit"
-                            class="bg-red-600 w-full text-center py-3 rounded-lg font-bold text-white hover:bg-red-800 cursor-pointer">Bayar</button>
+                            class="bg-red-600 w-full text-center py-3 rounded-lg font-bold text-white hover:bg-red-800 cursor-pointer">Reschedule</button>
                     </div>
                 </div>
             </div>
@@ -412,7 +414,7 @@
                     <p x-text="totalPrice.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })"></p>
                 </div>
                 <div>
-                    <form action="" method="POST" @submit.prevent="goToPayment">
+                    <form action="" method="POST" @submit.prevent="rescheduleProcess()">
                         @csrf
                         <template class="hidden" x-for="(item, index) in cart" :key="index">
                             <div>
@@ -424,7 +426,7 @@
                         </template>
                         <div class="flex space-x-4">
                             <button type="submit"
-                                class="bg-red-600 w-full text-center py-3 rounded-lg font-bold text-white hover:bg-red-800 cursor-pointer">Bayar</button>
+                                class="bg-red-600 w-full text-center py-3 rounded-lg font-bold text-white hover:bg-red-800 cursor-pointer">Reschedule</button>
                         </div>
                     </form>
                 </div>
@@ -482,7 +484,11 @@
                                     </svg>
                                 </template>
                             </div>
-                            <span class="text-gray-500" x-text="countRating + ' reviews'"></span>
+                            <p class="p-2.5 text-sm font-medium"
+                                x-text="field.review.average >= 5 ? 'Sangat Baik' : field.review.average >= 4 ? 'Baik' : field.review.average >= 3 ? 'Cukup Baik' : field.review.average >= 2 ? 'Buruk' : 'Sangat Buruk'">
+                            </p>
+                            <p class="font-medium mt-1" x-text="` | ${field.review.count} reviews`"></p>
+                            {{-- <span class="text-gray-500" x-text="countRating + ' reviews'"></span> --}}
                         </div>
                         <div class="mt-4 space-y-4">
                             <template x-if="reviews.length === 0">
@@ -614,7 +620,7 @@
                     </div>
                 @endforeach
             </div> --}}
-            <hr class="h-px my-8 bg-gray-400 border-0 dark:bg-gray-700">
+            <hr class="h-px my-8 bg-gray-400 border-0">
             <div class="rounded-lg border border-gray-300">
                 <div class=" grid p-6 sm:p-12 space-y-8">
                     <div>
@@ -630,7 +636,7 @@
         </div>
 
         <!-- Modal Error Besar -->
-        {{-- <div x-show="error" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+        <div x-show="error" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
             <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-8 text-center relative">
                 <button @click="error = null"
                     class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
@@ -644,7 +650,7 @@
                 <button @click="error = null"
                     class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Tutup</button>
             </div>
-        </div> --}}
+        </div>
     </div>
     <script>
         function fieldHandler() {
@@ -700,7 +706,7 @@
                     await this.fetchScheduleByRange(this.getWeekRange(this.currentDate));
                 },
 
-                async goToPayment() {
+                async rescheduleProcess() {
                     // Simpan cart
                     const schedules = this.cart.map(item => ({
                         field_id: this.field?.id || 98,
@@ -712,14 +718,17 @@
 
                     // Redirect ke halaman pembayaran
                     try {
-                        response = await axios.post('booking', {
-                            schedules
+                        const param = window.location.pathname.split('/')[2];
+                        const booking_id = param || null;
+                        response = await axios.post(`my-booking/${booking_id}/request-reschedule`, {
+                            new_schedule_date: this.formatDateYMD(this.currentDate),
+                            new_schedule_time: this.cart[0]?.time || '',
+                            new_schedule_price: this.parsePrice(this.cart[0]?.price || 0),
                         });
-                        console.log('Booking response:', response.data.data);
-                        booking_id = response.data.data.booking.id;
-                        window.location.href = `/payment/${booking_id}`;
+                        console.log('Booking response:', response.data.message);;
+                        window.location.href = 'users/profile-user';
                     } catch (error) {
-                        alert('Gagal membuat booking');
+                        this.error = error.response.data.error || 'Gagal membuat booking';
                         console.error('Gagal membuat booking:', error);
                     }
                 },
@@ -826,14 +835,18 @@
                 },
 
                 toggleSlotSelection(slot) {
-                    if (slot.available && !this.slotInCart(slot)) {
+                    if (slot.available) {
+                        // Unselect semua slot
+                        this.timeSlots.forEach(s => s.selected = false);
+                        // Kosongkan cart
+                        this.cart = [];
+                        // Select slot yang baru
                         slot.selected = true;
                         this.cart.push({
                             ...slot,
                             date: this.parseDate(this.selectedDate)
                         });
                     }
-
                 },
 
                 removeFromCart(item) {

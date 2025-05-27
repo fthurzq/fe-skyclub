@@ -103,6 +103,7 @@
                             alert.classList.remove('hidden');
                             alert.classList.add('bg-green-50', 'text-green-800');
                             alert.innerText = 'Login successful!';
+                            console.log(response.data.data.user);
                             window.location.href = '/';
 
                         }

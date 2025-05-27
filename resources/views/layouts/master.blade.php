@@ -29,11 +29,12 @@
                     isLoading: false,
                     errors: {},
                     async submitLogout() {
+                        user.clearUser();
+                        window.location.href = '/';
                         this.isLoading = true;
                         try {
-                            const response = await axios.post('/logout');
-                            console.log(response);
-                            user.clearUser();
+                            // const response = await axios.post('/users/logout');
+                            // console.log(response);
                         } catch (error) {
                             console.error(error);
                         } finally {

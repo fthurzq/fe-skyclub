@@ -10,53 +10,23 @@
 }" class="min-h-full bg-gray-200 shadow rounded-lg">
     <div class=" bg-white rounded-lg py-8 px-6 flex justify-between items-center">
         <div class="bg-cover rounded-xl overflow-hidden group w-20 h-20">
-            <img class="w-full h-full object-cover"
-                src="{{ asset('storage/field/images/' . $sesi->field->photos->first()->photo) }}" alt="">
+            <img class="w-full h-full object-cover" {{-- src="{{ asset('storage/field/images/' . $sesi->field->photos->first()->photo) }}" alt=""> --}}
+                :src="$store.storage.url + schedule.field.photos[0].photo" alt="">
         </div>
         <div class="flex items-center gap-6 ">
-            <p class="font-bold text-xl">{{ $sesi->field->name }}</p>
+            <p class="font-bold text-xl" x-text="schedule.field.name">$sesi->field->name</p>
             <div class="border-l border-gray-400 h-8 my-auto"></div>
             <div>
                 {{-- <p class="font-xs ">22 September 2024</p> --}}
-                <p class="font-xs ">{{ $sesi->formatted_date }}</p>
-                <p class="font-semibold">{{ $sesi->formatted_session }}</p>
+                <p class="font-xs" x-text="schedule.date">$sesi->formatted_date</p>
+                <p class="font-semibold" x-text="schedule.session">$sesi->formatted_session</p>
             </div>
             <div class="border-l border-gray-400 h-8 my-auto"></div>
-            <p class="font-semibold">{{ $sesi->field->formatted_price }}</p>
+            <p class="font-semibold" x-text="$store.format.rupiah(schedule.price)">$sesi->field->formatted_price
+            </p>
         </div>
-        <div
-            class="
-            @if ($sesi->status_request) @switch($sesi->status_request)
-                    @case('reschedule')
-                        bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300
-                        @break
-                    @case('request-reschedule')
-                    @case('request-cancel')
-                        bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300
-                        @break
-                    @case('cancel')
-                        bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300
-                        @break
-                    @default
-                        bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300
-                @endswitch
-            @else
-                @switch($booking->status)
-                    @case('accept')
-                        bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300
-                        @break
-                    @case('pending')
-                        bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300
-                        @break
-                    @case('failed')
-                    @case('canceled')
-                        bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300
-                        @break
-                    @default
-                        bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300
-                @endswitch @endif
-            ">
-            {{ $sesi->formattedStatusRequest ?? $booking->formatted_status }}
+        <div :class="styleBookingStatus(schedule.status)" x-text="schedule.status">
+            $sesi->formattedStatusRequest ?? $booking->formatted_status
         </div>
         <div>
             <button @click="open = !open" class="size-12 p-2.5 border border-black rounded-lg">
@@ -70,158 +40,138 @@
             <div class=" space-y-7">
                 <div class=" space-y-1">
                     <h6 class="font-semibold text-sm">Tanggal Pemesanan</h6>
-                    <p>{{ $booking->formatted_order_date }}</p>
+                    <p x-text="schedule.order_date">$booking->formatted_order_date</p>
                 </div>
                 <div class=" space-y-1">
                     <h6 class="font-semibold text-sm">Alamat</h6>
-                    <p>{{ $booking->rentedBy->address ?? '-' }}</p>
+                    <p x-text="schedule.user.address || '-'">$booking->rentedBy->address ?? '-'</p>
                 </div>
-                <div>
-                    @if ($booking->status == 'accept' && $sesi->status_request == null)
-                        <a href="{{ route('schedule.reschedule', $sesi->id) }}" @click="scheduleModal = true"
-                            class="my-3 px-6 py-3 bg-red-700 text-white font-bold rounded-lg">Ubah Jadwal</a>
-                    @endif
+                <div x-show="canRescheduleBooking(schedule.status)">
+                    <a :href="`${window.location.origin}/reschedule/${schedule.id}`" @click="scheduleModal = true"
+                        class="my-3 px-6 py-3 bg-red-700 text-white font-bold rounded-lg">Ubah Jadwal</a>
+                    {{-- @if ($booking->status == 'accept' && $sesi->status_request == null)
+                    @endif --}}
                 </div>
             </div>
             <div class=" space-y-7">
                 <div class=" space-y-1">
                     <h6 class="font-semibold text-sm">Pemesanan</h6>
-                    <p>{{ $booking->rentedBy->name }}</p>
+                    <p x-text="schedule.user.name"> $booking->rentedBy->name </p>
                 </div>
                 <div class=" space-y-1">
                     <h6 class="font-semibold text-sm">No. Telepon</h6>
-                    <p>{{ $booking->rentedBy->no_telp }}</p>
+                    <p x-text="schedule.user.no_telp">$booking->rentedBy->no_telp</p>
                 </div>
 
-                {{-- <div  @click="isWithinRange(day.date) && selectDate(day.date)" :class="{
-                    'bg-red-500 text-white': isSelected(day.date),
-                    'text-gray-400': !isWithinRange(day.date),
-                    }"
-                    class="cursor-pointer text-center w-16 p-2 rounded-md">
-                    <div class="text-xs font-medium" x-text="day.name"></div>
-                    <div class="text-sm font-semibold"
-                        x-text="day.date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })">
-                    </div>
-                </div> --}}
-
-                <div>
-                    @if ($booking->status == 'accept' && $sesi->status_request == null)
-                        <a @click="cancelBookingModal = true"
-                            class="my-3 px-6 py-3 bg-red-700 text-white font-bold rounded-lg">Batalkan</a>
-                    @endif
+                <div x-show="canCancelBooking(schedule.status)">
+                    <a @click="cancelBookingModal = true"
+                        class="my-3 px-6 py-3 bg-red-700 text-white font-bold rounded-lg">Batalkan</a>
+                    {{-- @if ($booking->status == 'accept' && $sesi->status_request == null)
+                    @endif --}}
                 </div>
             </div>
             <div class=" space-y-7">
                 <div class=" space-y-1">
                     <h6 class="font-semibold text-sm">Username</h6>
-                    <p>{{ $booking->rentedBy->username }}</p>
+                    <p x-text="schedule.user.username">$booking->rentedBy->username</p>
                 </div>
-                <div class=" space-y-1">
+                <div class=" space-t-1">
                     <h6 class="font-semibold text-sm">Email</h6>
-                    <p>{{ $booking->rentedBy->email }}</p>
+                    <p x-text="schedule.user.email"> $booking->rentedBy->email </p>
                 </div>
-                <div>
-                    @if (!$sesi->sparing && $booking->status == 'accept' && $sesi->status_request == null)
+                <div x-show="canSparing(schedule.status, schedule.has_sparing)">
+                    <button @click="sparingModal = true"
+                        class="px-6 py-3 bg-red-700 text-white font-bold rounded-lg">Jadikan Sparing</button>
+                    {{-- @if (!$sesi->sparing && $booking->status == 'accept' && $sesi->status_request == null)
                         <button @click="sparingModal = true"
                             class="my-3 px-6 py-3 bg-red-700 text-white font-bold rounded-lg">Jadikan Sparing</button>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
-        <div class="space-y-4">
+        {{-- <div class="space-y-4">
             <h4 class=" font-bold font-sm">Bukti Transfer</h4>
             <button @click="proofTransfer = true" class="bg-cover rounded-xl overflow-hidden group w-79 h-45">
                 <img class="w-full h-full object-cover"
                     src="{{ route('booking.paymentImage', basename($booking->uploud_payment)) }}" alt="">
             </button>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Close Modal Button -->
-    <div x-show="proofTransfer" x-cloak
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" @click="proofTransfer = false">
+    {{-- <div x-show="proofTransfer" x-cloak class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        @click="proofTransfer = false">
         <div @click.stop class="bg-white p-2 rounded-lg justify-center flex flex-col text-center">
             <div class="rounded-lg overflow-hidden group w-79">
-                <img class="w-full h-full"
-                    src="{{ route('booking.paymentImage', basename($booking->uploud_payment)) }}" alt="">
+                <img class="w-full h-full" src="{{ route('booking.paymentImage', basename($booking->uploud_payment)) }}"
+                    alt="">
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Cancel Modal -->
-    <div x-show="cancelBookingModal" x-cloak
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <div x-show="cancelBookingModal" x-cloak class="fixed inset-0 flex items-center justify-center bg-black/50 z-20">
         <div class="bg-white p-6 rounded-lg justify-center flex flex-col text-center">
             <h2 class="text-xl font-bold mb-4 font-2xl">Yakin ingin batalkan pesanan?</h2>
-            <p>Konfirmasi Pembatalan Pemesanan Anda</p>
-            <div class="mt-4 flex justify-center">
-                <button @click="cancelBookingModal = false"
-                    class="px-4 py-2 bg-gray-300 rounded-lg mr-2">Kembali</button>
-                <form action="{{ route('schedule.cancel', $sesi->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="px-4 py-2 bg-red-700 text-white rounded-lg">Ya, Batalkan</button>
+            {{-- <p>Konfirmasi Pembatalan Pemesanan Anda</p> --}}
+            <div class="mt-4 w-full">
+                <form action="" method="POST"
+                    @submit.prevent="cancelBooking(schedule.id, ); cancelBookingModal = false">
+
+                    <input type="text" name="reason" id="reason"
+                        class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-4"
+                        placeholder="Masukan alasan pembatalan" x-model="cancelReason" required />
+                    <button @click="cancelBookingModal = false"
+                        class="px-4 py-2 w-1/2 bg-gray-300 rounded-lg mr-2">Kembali</button>
+                    <button type="submit" class="px-4 py-2 bg-red-700 text-white rounded-lg">Ya,
+                        Batalkan</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Schedule Modal -->
-    {{-- <div x-show="scheduleModal" x-cloak
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-        <form action="" method="POST" class="bg-white p-4 rounded-lg w-80">
-            @csrf
-            <div>
-                <label for="nama_tim" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
-                    Tim</label>
-                <input type="text" id="nama_tim"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Masukan nama tim" required />
-            </div>
-            <div>
-                <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi
-                    Singkat</label>
-                <input type="text" id="deskripsi"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Masukan deskripsi singkat" required />
-            </div>
-            <div class="mt-4 flex justify-end">
-                <button @click="scheduleModal = false" class="px-4 py-2 bg-gray-300 rounded-lg mr-2">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-red-700 text-white rounded-lg">Save</button>
-            </div>
-        </form>
-    </div> --}}
-
     <!-- Sparing Modal -->
-    <div x-show="sparingModal" x-cloak class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <form action="{{ route('sparing.store') }}" method="POST" class="bg-white p-4 rounded-lg w-80">
-            @csrf
+    <div x-show="sparingModal" x-cloak class="fixed inset-0 flex items-center justify-center bg-black/50">
+        <form action="" method="POST" class="bg-white p-4 rounded-lg w-80"
+            @submit.prevent="createSparing(schedule.id); sparingModal = false">
+            <h2 class="text-xl text-center font-bold mb-4 font-2xl">Buat Sparing</h2>
             <div class="mb-6">
-                <label for="nama_tim" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama
+                <label for="nama_tim" class="block mb-2 text-sm font-medium text-gray-900">Nama
                     Tim</label>
                 <input type="text" id="nama_tim" name="team_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Masukan nama tim" value="{{ Auth::user()->team ?? '' }}" />
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Wajib Memasukan Nama Tim" disabled :value="schedule.user.team" />
             </div>
             <div class="mb-6">
-                <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi
+                <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi
                     Singkat</label>
                 <input type="text" id="deskripsi" name="description"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Masukan deskripsi singkat" value="" />
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Masukan deskripsi singkat" x-model="sparingDescription" />
             </div>
             <div class="flex justify-end">
                 <button @click="sparingModal = false" type="button"
                     class="px-4 py-2 bg-gray-300 rounded-lg mr-2">Cancel</button>
-                <input type="hidden" name="id_list_booking" value="{{ $sesi->id }}">
+                <input type="hidden" name="id_list_booking" value=" $sesi->id ">
                 <button type="submit" class="px-4 py-2 bg-red-700 text-white rounded-lg">Save</button>
             </div>
         </form>
     </div>
+
+    <!-- Modal Error Besar -->
+    <div x-show="error" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+        <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-8 text-center relative">
+            <button @click="error = null"
+                class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+            <svg class="mx-auto mb-4 w-16 h-16 text-red-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                </path>
+            </svg>
+            <h2 class="text-2xl font-bold mb-2 text-red-600">Terjadi Kesalahan</h2>
+            <p class="mb-6 text-gray-700 text-lg" x-text="error"></p>
+            <button @click="error = null"
+                class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Tutup</button>
+        </div>
+    </div>
 </div>
-{{-- @push('scripts')
-    <script>
-        function canCancel() {
-            return
-        }
-    </script>
-@endpush --}}

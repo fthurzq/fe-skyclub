@@ -121,51 +121,57 @@
                             Tanggal
                             <i class="fas fa-sort-down"></i>
                         </th>
-                        <th class="px-5 py-3 bg-white rounded-e-xl"></th>
+                        <th class="px-5 py-3 bg-white rounded-e-xl">Lihat</th>
                     </tr>
                 </thead>
                 <tbody>
                     <template x-if="sparings.length > 0">
                         <template x-for="sparing in sparings" :key="sparing.id">
+                            {{-- <tr>
+                                <td class="px-5 py-2 bg-transparent" x-text="sparing.id"></td>
+                            </tr> --}}
+                            <tr>
+                                <td class="p-4 bg-white text-sm rounded-s-xl ">
+                                    <div class="flex items-center text-left">
+                                        <div class="flex-shrink-0 w-10 h-10">
+                                            <img class="w-full h-full rounded-full"
+                                                :src="$store.storage.url + sparing.list_booking.user.profile_photo"
+                                                alt="Profile photo">
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-gray-900 whitespace-no-wrap font-semibold"
+                                                x-text="sparing.list_booking.user.team">
+                                                $sparing->createdBy->team</p>
+                                            <p class="text-gray-600 whitespace-no-wrap lg:hidden">Jl. Jenderal Sudirman No.
+                                                45
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-7 px-4 text-left bg-white text-sm hidden lg:block">
+                                    <p class="text-gray-900 whitespace-no-wrap">Jl. Jenderal Sudirman No. 45</p>
+                                </td>
+                                <td class="py-7 px-4 text-left bg-white text-sm">
+                                    <p class="text-gray-900 whitespace-no-wrap sm:hidden"
+                                        x-text="sparing.list_booking.date">
+                                        $sparing->listBooking->formatted_date</p>
+                                    <p class="text-gray-900 whitespace-no-wrap" x-text="sparing.list_booking.session">
+                                        $sparing->listBooking->formatted_session
+                                    </p>
+                                </td>
+                                <td class="py-7 px-4 text-left bg-white text-sm hidden sm:block">
+                                    <p class="text-gray-900 whitespace-no-wrap" x-text="sparing.list_booking.date">
+                                        $sparing->listBooking->formatted_date</p>
+                                </td>
+                                <td class="py-7 px-4 text-center bg-white text-sm rounded-e-xl">
+                                    <a href="{{ route('sparings.index') }}" class="text-black font-semibold">Lihat</a>
+                                </td>
+                            </tr>
+                            <tr class="shadow-lg rounded-xl ring-1 ring-gray-200">
+                            </tr>
                             <tr>
                                 <td colspan="4" class="px-5 py-2 bg-transparent"></td>
                             </tr>
-                                <tr class="shadow-lg rounded-xl ring-1 ring-gray-200">
-                                    <td class="p-4 bg-white text-sm rounded-s-xl ">
-                                        <div class="flex items-center text-left">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                <img class="w-full h-full rounded-full"
-                                                    :src="sparing.createdBy.formattedProfilePhoto" alt="Profile photo">
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="text-gray-900 whitespace-no-wrap font-semibold" x-text="sparing.created_by.team">
-                                                    $sparing->createdBy->team</p>
-                                                <p class="text-gray-600 whitespace-no-wrap lg:hidden">Jl. Jenderal Sudirman No. 45
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="py-7 px-4 text-left bg-white text-sm hidden lg:block">
-                                        <p class="text-gray-900 whitespace-no-wrap">Jl. Jenderal Sudirman No. 45</p>
-                                    </td>
-                                    <td class="py-7 px-4 text-left bg-white text-sm">
-                                        <p class="text-gray-900 whitespace-no-wrap sm:hidden" x-text="sparing.list_booking.date">
-                                            $sparing->listBooking->formatted_date</p>
-                                        <p class="text-gray-900 whitespace-no-wrap" x-text="sparing.list_booking.session">
-                                            $sparing->listBooking->formatted_session
-                                        </p>
-                                    </td>
-                                    <td class="py-7 px-4 text-left bg-white text-sm hidden sm:block">
-                                        <p class="text-gray-900 whitespace-no-wrap" x-text="sparing.list_booking.date">
-                                            $sparing->listBooking->formatted_date</p>
-                                    </td>
-                                    <td class="py-7 px-4 text-center bg-white text-sm rounded-e-xl">
-                                        <a href="{{ route('sparings.index') }}" class="text-black font-semibold">Lihat</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="px-5 py-2 bg-transparent"></td>
-                                </tr>
                         </template>
                     </template>
                 </tbody>
@@ -185,7 +191,8 @@
             <div class="ml-auto place-self-center lg:col-span-7 md:text-left text-right">
                 <h1 class="text-5xl font-bold mb-6 max-w-2xl tracking-tight leading-none md:text-5xl xl:text-6xl">
                     Sudah punya team tapi gak tau mau lawan siapa?</h1>
-                <h6 class="text-base mb-8 max-w-2xl font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                <h6
+                    class="text-base mb-8 max-w-2xl font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
                     SKY CLUB punya solusinya! Ikuti komunitas sparing kami dan temukan lawan tanding yang seimbang.
                     Tingkatkan skill dan nikmati pertandingan seru dengan berbagai tim di sini!</h6>
                 <a href="/sparing" class=" bg-red-600 rounded-lg px-6 py-3 font-semibold text-white">Lihat
@@ -204,8 +211,9 @@
                 <!-- Previous Button -->
                 <button @click="prevSlide"
                     class="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full size-14 flex items-center justify-center shadow hover:bg-gray-100 z-10">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                        viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M5 12h14M5 12l4-4m-4 4 4 4" />
                     </svg>
@@ -300,7 +308,8 @@
                 <h1 class="text-5xl font-bold">Apa Yang Baru</h1>
                 <h5 class="text-base">Berikut adalah artikel-artikel terkait SKY CLUB</h5>
             </div>
-            <div x-data="articlesHandler()" x-init="fetchArticles()" class="grid lg:grid-cols-3 grid-cols-1 justify-between mt-10 lg:space-y-0 space-y-6 gap-8">
+            <div x-data="articlesHandler()" x-init="fetchArticles()"
+                class="grid lg:grid-cols-3 grid-cols-1 justify-between mt-10 lg:space-y-0 space-y-6 gap-8">
                 <template x-if="articles.length > 0">
                     <template x-for="article in articles" :key="article.id">
                         <div
@@ -313,14 +322,15 @@
                             <div class="p-4 text-left">
                                 <div class="">
                                     <a :href="'/article/' + article.id">
-                                        <h5 x-text="article.title" class="mb-2 text-2xl font-bold tracking-tight text-gray-900"></h5>
+                                        <h5 x-text="article.title"
+                                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900"></h5>
                                     </a>
                                     <p class="mb-3 font-normal text-gray-700 break-words"
-                                    x-text="article.content.substring(0, 150) + '...'"></p>></p>
+                                        x-text="article.content.substring(0, 150) + '...'"></p>></p>
                                 </div>
                                 <div class="flex space-x-4 items-center mt-10">
-                                    <img class="rounded-full w-10 h-10" 
-                                        :src="article.author.avatar || '{{ asset('assets/images/profile.svg') }}'" 
+                                    <img class="rounded-full w-10 h-10"
+                                        :src="article.author.avatar || '{{ asset('assets/images/profile.svg') }}'"
                                         :alt="article.author.name">
                                     <div>
                                         <p x-text="article.author.name" class="text-xs md:text-sm font-semibold"></p>
@@ -333,19 +343,43 @@
                 </template>
 
                 <div x-show="isLoading" class="text-center py-8">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500">
+                    </div>
                 </div>
 
                 <div x-show="error" class="text-red-500 p-4" x-text="error"></div>
             </div>
 
             <div class="flex justify-end my-10">
-                <a href="{{ route('article.index') }}" 
+                <a href="{{ route('article.index') }}"
                     class=" bg-red-600 rounded px-4 py-2 font-semibold text-white hover:bg-red-800">Lihat
                     Semuanya</a>
             </div>
         </div>
     </div>
+
+    <script>
+        function sparingHandler() {
+            return {
+                sparings: [],
+                sparingModal: false,
+                isLoading: false,
+                async fetchSparings() {
+                    this.isLoading = true;
+                    try {
+                        const response = await axios.get('/sparings');
+                        console.log(response.data);
+                        this.sparings = response.data.data; // Asumsikan API mengembalikan array objek sparing
+                        console.log(this.sparings);
+                    } catch (error) {
+                        console.error('Terjadi Kesalahan Di Server:', error);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                }
+            }
+        }
+    </script>
 @endsection
 @push('script')
     <script>
@@ -392,7 +426,7 @@
                 }
             }
         }
-        
+
         function articlesHandler() {
             return {
                 articles: [],
@@ -415,11 +449,14 @@
                 }
                 formatDate(dateString) {
                     if (!dateString) return '';
-                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
                     return new Date(dateString).toLocaleDateString('id-ID', options);
                 }
             }
         }
-        
     </script>
 @endpush

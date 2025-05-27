@@ -55,9 +55,8 @@
                             </div>
                         </div>
                     </div>
-                    <form action="" method="POST">
-                        @csrf
-                        <button @click="sparingModal = true" type="submit"
+                    <form action="" method="POST" @submit.prevent="createSparing(sparing.id)">
+                        <button type="submit"
                             class=" bg-red-600 rounded-lg px-6 py-3 font-semibold text-white text-base">Ayo
                             Sparing</button>
                     </form>
@@ -75,6 +74,38 @@
         {{-- Loading Animation --}}
         <div x-show="isLoading" class="flex justify-end py-20">
             <img src="{{ asset('assets/icons/loading_red.gif') }}" width="100" alt="">
+        </div>
+
+        <!-- Modal Error Besar -->
+        <div x-show="error" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+            <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-8 text-center relative">
+                <button @click="error = null"
+                    class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+                <svg class="mx-auto mb-4 w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+                <h2 class="text-2xl font-bold mb-2 text-red-600">Terjadi Kesalahan</h2>
+                <p class="mb-6 text-gray-700 text-xl" x-text="error"></p>
+                <button @click="error = null"
+                    class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Tutup</button>
+            </div>
+        </div>
+
+        <!-- Modal Message Berhasil -->
+        <div x-show="message" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+            <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-8 text-center relative">
+                <button @click="message = null"
+                    class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+                <svg class="mx-auto mb-4 w-16 h-16 text-green-500" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <h2 class="text-2xl font-bold mb-2 text-green-600">Berhasil</h2>
+                <p class="mb-6 text-gray-700 text-xl" x-text="message"></p>
+                <button @click="message = null"
+                    class="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition">Tutup</button>
+            </div>
         </div>
 
 
@@ -135,12 +166,7 @@
     </div>
 
 
-    <!-- Sparing Modal -->
-    <button data-modal-target="popup-modal" data-modal-toggle="popup-modal"
-        class=" hidden block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-        type="button">
-        Toggle modal
-    </button>
+
     @if (session()->has('sparingFailed'))
         <div id="popup-modal" tabindex="-1"
             class="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-black bg-opacity-50">
@@ -181,6 +207,8 @@
                 sparings: [],
                 sparingModal: false,
                 isLoading: false,
+                error: null,
+                message: null,
                 async fetchSparings() {
                     this.isLoading = true;
                     try {
@@ -192,6 +220,17 @@
                         console.error('Terjadi Kesalahan Di Server:', error);
                     } finally {
                         this.isLoading = false;
+                    }
+                },
+                async createSparing(sparingId) {
+                    try {
+                        const response = await axios.post(`/sparings/${sparingId}/request`);
+                        console.log(response.data);
+                        this.fetchSparings(); // Refresh data sparing
+                        this.message = response.data.message || 'Permintaan sparing berhasil dikirim.';
+                    } catch (error) {
+                        console.error('Terjadi Kesalahan:', error);
+                        this.error = error.response.data.errors || 'Terjadi kesalahan saat mengirim permintaan sparing.'
                     }
                 }
             }
