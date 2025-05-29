@@ -50,6 +50,23 @@ Route::get('payment/success', function () {
     return view('payments.pembayaranBerhasil');
 })->name('payment.success');
 
+// Wallet
+Route::get('wallet', function () {
+    return view('wallets.detailWallet');
+})->name('wallet.index');
+Route::get('wallet/topup', function () {
+    return view('wallets.detailTopUp');
+})->name('wallet.topup');
+Route::get('wallet/withdraw', function () {
+    return view('wallets.detailWithdraw');
+})->name('wallet.withdraw');
+
+// Notifications
+Route::get('notification', function () {
+    return view('profiles.notifikasi');
+})->name('notifications.index');
+
+
 // Article
 Route::get('articles', function () {
     return view('articles.userIndex');
