@@ -66,7 +66,6 @@ Route::get('notification', function () {
     return view('profiles.notifikasi');
 })->name('notifications.index');
 
-
 // Article
 Route::get('articles', function () {
     return view('articles.userIndex');
@@ -85,15 +84,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('profiles.profileAdmin');
     })->name('profile');
 
-    // Rute FE untuk tampilan show artikel
+    // Article
+    Route::get('/articles', function () {
+        return view('admin.article.article');
+    })->name('articles');
+    Route::get('/article/create', function () {
+        return view('admin.article.article');
+    })->name('article.create');
     Route::get('/articles/{id}', function ($id) {
         return view('articles.articledetail', ['articleId' => $id]);
     })->name('articles.show');
-
-    // Rute FE untuk tampilan edit artikel
-    Route::get('/articles/{id}/edit', function ($id) {
-        return view('admin.article.update-article', ['articleId' => $id]);
-    })->name('articles.edit');
 
     // Melihat semua booking
     Route::get('/all-booking', function () {
@@ -109,5 +109,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/cancel-booking', function () {
         return view('admin.booking.cancelBooking');
     })->name('cancel');
+
+    // Voucher
+    Route::get('/voucher', function () {
+    return view('admin.voucher.voucher');
+    })->name('voucher');
+    Route::get('/simple-tables', function () {
+        return view('admin.voucher.simpleTables');
+    })->name('simple-tables');
 });
 

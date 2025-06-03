@@ -458,5 +458,39 @@
                 }
             }
         }
+
+        function voucherHandler() {
+        return {
+            vouchers: [],
+            voucherModal: false,
+            isLoading: false,
+            error: null,
+            message: null,
+            async fetchVouchers() {
+                this.isLoading = true;
+                try {
+                    const response = await axios.get('/vouchers');
+                    console.log(response.data);
+                    this.vouchers = response.data.data; // Asumsikan API mengembalikan array objek sparing
+                    console.log(this.vouchers);
+                } catch (error) {
+                    console.error('Terjadi Kesalahan Di Server:', error);
+                } finally {
+                    this.isLoading = false;
+                }
+            },
+            // async createSparing(sparingId) {
+            //     try {
+            //         const response = await axios.post(`/vouchers/${voucherId}/request`);
+            //         console.log(response.data);
+            //         this.fetchVoucher(); // Refresh data sparing
+            //         this.message = response.data.message || 'Permintaan sparing berhasil dikirim.';
+            //     } catch (error) {
+            //         console.error('Terjadi Kesalahan:', error);
+            //         this.error = error.response.data.errors || 'Terjadi kesalahan saat mengirim permintaan sparing.'
+            //     }
+            // }
+        }
+    }
     </script>
 @endpush
