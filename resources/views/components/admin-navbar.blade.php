@@ -46,7 +46,7 @@
       <div class="flex items-center lg:order-2">
         <div class="flex items-center space-x-3 self-center">
             <!-- Profile dropdown -->
-            <div class="relative ml-3" x-data="{ isOpen: false, user: $store.user }" x-init="user.authCheck()}" x-cloak>
+            <div class="relative ml-3" x-data="{ isOpen: false }" x-cloak>
                 <div class="flex items-center space-x-2">
                     <button type="button" @click="isOpen = !isOpen"
                         class="relative flex max-w-xs items-center rounded-full text-sm "
@@ -67,18 +67,22 @@
                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
                     tabindex="-1">
+
+                    
                     {{-- <a href="{{ route('profileUser.show', auth()->user()->id) }}"> --}}
-                    <a :href="#" class="block px-4 py-2 text-sm text-gray-700"
+                    <a href="" class="block px-4 py-2 text-sm text-gray-700"
                         role="menuitem" tabindex="-1" id="user-menu-item-0" x-show="user.authenticated">Your Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
+                    <a href="" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                         tabindex="-1" id="user-menu-item-1">Settings</a>
                     {{-- <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="block px-4 py-2 text-sm text-gray-700" role="menuitem"
                             tabindex="-1" id="user-menu-item-2">Sign out</button>
                     </form> --}} 
+
+
                     <form method="POST" id="logout" x-data="logoutHandler()"
-                        @submit.prevent="submitLogout">
+                        @submit.prevent="$store.user.clearUser(); window.location.href = '/'">
                         <button type="submit" class="block px-4 py-2 text-sm text-gray-700"
                             role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</button>
                     </form>

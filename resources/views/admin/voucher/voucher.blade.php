@@ -48,7 +48,7 @@
 
 
 @section('content')
-<div x-data="voucherHandler()" x-init="fetchVouchers()">
+<div x-data="voucherHandler" x-init="fetchVouchers">
     <table id="search-table">
         <thead>
             <tr class="">
@@ -135,89 +135,85 @@
                         <td x-text="voucher.code" class="font-medium text-gray-900 whitespace-nowrap"></td>
                         <td x-text="formatDate(voucher.expired_date)"></td>
                         <td x-text="voucher.quota"></td>
-                        <td x-text="voucher.discount_price !== null ? formatRupiah(voucher.discount_price) : '-'">
-                        </td>
-                        <td x-text="voucher.discount_precentage ?? '-'">
-                        </td>
-                        <td x-text="voucher.max_discount !== null ? formatRupiah(voucher.max_discount) : '-'">
-                        </td>
-                        <td x-text="voucher.min_price !== null ? formatRupiah(voucher.min_price) : '-'">
-                        </td>
+                        <td x-text="voucher.discount_price !== null ? formatRupiah(voucher.discount_price) : '-'"></td>
+                        <td x-text="voucher.discount_precentage ?? '-'"></td>
+                        <td x-text="voucher.max_discount !== null ? formatRupiah(voucher.max_discount) : '-'"></td>
+                        <td x-text="voucher.min_price !== null ? formatRupiah(voucher.min_price) : '-'"></td>
                         {{-- <td>
                             <div class="inline-flex rounded-md shadow-sm" role="group">
                                 <button data-modal-target="editVoucherModal-{{ $voucher->id }}" data-modal-toggle="editVoucherModal-{{ $voucher->id }}" type="button" class="w-20 py-2 text-sm font-medium text-white bg-green-500 rounded-s-lg hover:bg-green-600 focus:text-white dark:bg-green-700 dark:text-white dark:hover:bg-green-800 dark:focus:text-white">
-                                Edit
+                                    Edit
                                 </button>
                                 <!-- Edit Voucher Modal -->
                                 <div id="editVoucherModal-{{ $voucher->id }}" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
                                     <div class="relative w-full h-full max-w-2xl md:h-auto">
                                         <!-- Modal content -->
                                         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                <!-- Modal header -->
-                                                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                                                Edit Voucher
-                                                        </h3>
-                                                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editVoucherModal-{{ $voucher->id }}">
-                                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                                                </svg>
-                                                        </button>
+                                            <!-- Modal header -->
+                                            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                                    Edit Voucher
+                                                </h3>
+                                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editVoucherModal-{{ $voucher->id }}">
+                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                </button>
                                                 </div>
                                                 <!-- Modal body -->
                                                 <div class="p-6 space-y-6">
-                                                        <form id="editVoucherForm-{{ $voucher->id }}" action="{{ route('admin.voucher.update', $voucher->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <div class="grid grid-cols-2 gap-4">
-                                                                        <div class="mb-4 col-span-2">
-                                                                                <label for="code-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Code</label>
-                                                                                <input type="text" name="code" id="code-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" maxlength="6" value="{{ $voucher->code }}" required>
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                                <label for="expire_date-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Expire Date</label>
-                                                                                <input type="date" name="expire_date" id="expire_date-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->expire_date }}" required>
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                                <label for="quota-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quota</label>
-                                                                                <input type="number" name="quota" id="quota-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->quota }}" required>
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                                <label for="discount_price-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Discount Price</label>
-                                                                                <input type="text" name="discount_price" id="discount_price-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->discount_price }}" oninput="formatRupiah(this)">
-                                                                                <input type="hidden" name="discount_price_hidden" id="discount_price_hidden-{{ $voucher->id }}" value="{{ $voucher->discount_price }}">
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                                <label for="discount_percentage-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Discount Percentage</label>
-                                                                                <input type="text" name="discount_percentage" id="discount_percentage-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->discount_percentage }}" oninput="formatPercentage(this)">
-                                                                                <input type="hidden" name="discount_percentage_hidden" id="discount_percentage_hidden-{{ $voucher->id }}" value="{{ $voucher->discount_percentage }}">
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                                <label for="max_discount-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Maximal Discount</label>
-                                                                                <input type="text" name="max_discount" id="max_discount-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->max_discount }}" oninput="formatRupiah(this)">
-                                                                                <input type="hidden" name="max_discount_hidden" id="max_discount_hidden-{{ $voucher->id }}" value="{{ $voucher->max_discount }}">
-                                                                        </div>
-                                                                        <div class="mb-4">
-                                                                                <label for="min_price-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Minimal Price</label>
-                                                                                <input type="text" name="min_price" id="min_price-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->min_price }}" oninput="formatRupiah(this)">
-                                                                                <input type="hidden" name="min_price_hidden" id="min_price_hidden-{{ $voucher->id }}" value="{{ $voucher->min_price }}">
-                                                                        </div>
+                                                    <form id="editVoucherForm-{{ $voucher->id }}" action="{{ route('admin.voucher.update', $voucher->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="grid grid-cols-2 gap-4">
+                                                            <div class="mb-4 col-span-2">
+                                                                <label for="code-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Code</label>
+                                                                    <input type="text" name="code" id="code-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm" maxlength="6" value="{{ $voucher->code }}" required>
                                                                 </div>
+                                                            <div class="mb-4">
+                                                                    <label for="expire_date-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Expire Date</label>
+                                                                    <input type="date" name="expire_date" id="expire_date-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->expire_date }}" required>
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="quota-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quota</label>
+                                                                    <input type="number" name="quota" id="quota-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->quota }}" required>
+                                                                </div>
+                                                            <div class="mb-4">
+                                                                <label for="discount_price-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Discount Price</label>
+                                                                <input type="text" name="discount_price" id="discount_price-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->discount_price }}" oninput="formatRupiah(this)">
+                                                                <input type="hidden" name="discount_price_hidden" id="discount_price_hidden-{{ $voucher->id }}" value="{{ $voucher->discount_price }}">
+                                                            </div>
+                                                            <div class="mb-4">
+                                                                    <label for="discount_percentage-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Discount Percentage</label>
+                                                                    <input type="text" name="discount_percentage" id="discount_percentage-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->discount_percentage }}" oninput="formatPercentage(this)">
+                                                                    <input type="hidden" name="discount_percentage_hidden" id="discount_percentage_hidden-{{ $voucher->id }}" value="{{ $voucher->discount_percentage }}">
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="max_discount-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Maximal Discount</label>
+                                                                    <input type="text" name="max_discount" id="max_discount-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->max_discount }}" oninput="formatRupiah(this)">
+                                                                    <input type="hidden" name="max_discount_hidden" id="max_discount_hidden-{{ $voucher->id }}" value="{{ $voucher->max_discount }}">
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="min_price-{{ $voucher->id }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Minimal Price</label>
+                                                                    <input type="text" name="min_price" id="min_price-{{ $voucher->id }}" class="block w-full mt-1 border-gray-300 rounded-md shadow-sm dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="{{ $voucher->min_price }}" oninput="formatRupiah(this)">
+                                                                    <input type="hidden" name="min_price_hidden" id="min_price_hidden-{{ $voucher->id }}" value="{{ $voucher->min_price }}">
+                                                                </div>
+                                                            </div>
                                                         </form>
                                                 </div>
                                                 <!-- Modal footer -->
                                                 <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                                        <button type="submit" form="editVoucherForm-{{ $voucher->id }}" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                                                Update Voucher
-                                                        </button>
+                                                    <button type="submit" form="editVoucherForm-{{ $voucher->id }}" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                                        Update Voucher
+                                                    </button>
                                                         <button type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" data-modal-hide="editVoucherModal-{{ $voucher->id }}">Cancel</button>
+                                                    </div>
                                                 </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
                                 <button data-modal-target="delete-modal-{{ $voucher->id }}" data-modal-toggle="delete-modal-{{ $voucher->id }}" type="button" class="w-20 py-2 text-sm font-medium text-white bg-red-500 rounded-e-lg hover:bg-red-600 focus:text-white dark:bg-red-700 dark:text-white dark:hover:bg-red-800 dark:focus:text-white">
-                                Delete
+                                    Delete
                                 </button>
                                 <div id="delete-modal-{{ $voucher->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                     <div class="relative p-4 w-full max-w-md max-h-full">
@@ -233,11 +229,9 @@
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                                 </svg>
                                                 <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah anda yakin akan menghapus voucher ini?</h3>
-                                                <form action="{{ route('admin.voucher.destroy', $voucher->id) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                <form action="" method="DELETE" @submit.prevent="deleteSparing(sparing.id)" class="inline">
                                                     <button type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                                                    Delete
+                                                        Delete
                                                     </button>
                                                 </form>
                                                 <button data-modal-hide="delete-modal-{{ $voucher->id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
@@ -246,11 +240,35 @@
                                     </div>
                                 </div>
                             </div>
-                        </td>
+                        </td> --}}
+                        <td>hei</td>
                     </tr>
-                    <!-- @endforeach -->
-                    --}}
                 </template>
+            </template>
+            <template x-if="isLoading">
+                <tr>
+                    <td colspan="8" class="text-center py-4">
+                        <div class="flex justify-center items-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Memuat data...
+                        </div>
+                    </td>
+                </tr>
+            </template>
+            
+            <template x-if="error">
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-red-500" x-text="error"></td>
+                </tr>
+            </template>
+            
+            <template x-if="!isLoading && !error && vouchers.length === 0">
+                <tr>
+                    <td colspan="8" class="text-center py-4">Tidak ada data voucher</td>
+                </tr>
             </template>
         </tbody>
     </table>
@@ -334,13 +352,16 @@
                 this.isLoading = true;
                 try {
                     const response = await axios.get('/vouchers');
-                    console.log(response.data);
+                    console.log('✅ Fetch vouchers BERHASIL', response.data);
                     this.vouchers = response.data.data; // Asumsikan API mengembalikan array objek sparing
                     console.log(this.vouchers);
+
                 } catch (error) {
                     console.error('Terjadi Kesalahan Di Server:', error);
+
                 } finally {
                     this.isLoading = false;
+                    console.log('Loading state:', this.isLoading); // Debug
                 }
             },
             async createVoucher(voucherId) {
@@ -353,6 +374,36 @@
                     console.error('Terjadi Kesalahan:', error);
                     this.error = error.response.data.errors || 'Terjadi kesalahan saat mengirim permintaan sparing.'
                 }
+            },
+            async deleteVoucher(voucherId) {
+                try {
+                    const response = await axios.delete(`/vouchers/${voucherId}/request`);
+                    console.log(response.data);
+                    this.fetchVoucher(); // Refresh data sparing
+                    this.message = response.data.message || 'Permintaan sparing berhasil dikirim.';
+                } catch (error) {
+                    console.error('Terjadi Kesalahan:', error);
+                    this.error = error.response.data.errors || 'Terjadi kesalahan saat mengirim permintaan sparing.'
+                }
+            },
+
+            formatDate(dateString) {
+                if (!dateString) return '-';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            },
+
+            formatRupiah(amount) {
+                if (amount === null || amount === undefined || amount === '') return '-';
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
             }
         }
     }

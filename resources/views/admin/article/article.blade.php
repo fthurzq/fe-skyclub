@@ -1,4 +1,3 @@
-
 @extends('layouts.adminFullPage')
 
 @push('header')
@@ -6,256 +5,157 @@
 @endpush
 
 @section('content')
-<div x-data="articleTable()" x-init="fetchArticles()">
-    <!-- Search and Create Button -->
-    <div class="flex justify-between mb-4">
-        <div class="relative w-64">
-            <input 
-                type="text" 
-                x-model="searchQuery" 
-                @input.debounce.500ms="searchArticles"
-                placeholder="Search articles..."
-                class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-            </div>
-        </div>
-        <a 
-            href="{{ route('admin.article.create') }}" 
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-            </svg>
-            Create Article
-        </a>
-    </div>
-
-    <!-- Loading State -->
-    <div x-show="loading" class="text-center py-8">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-        <p class="mt-2">Loading articles...</p>
-    </div>
-
-    <!-- Error State -->
-    <div x-show="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert" x-text="error"></div>
-
-    <!-- Articles Table -->
-    <div x-show="!loading && !error" class="overflow-x-auto">
-        <table class="min-w-full bg-white rounded-lg overflow-hidden">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-6 py-3 text-left">
-                        <button @click="sortBy('title')" class="flex items-center font-medium text-gray-700 uppercase tracking-wider">
-                            Title
-                            <svg class="w-4 h-4 ml-1" :class="{ 'transform rotate-180': sortField === 'title' && sortDirection === 'desc' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                    </th>
-                    <th class="px-6 py-3 text-left">
-                        <button @click="sortBy('author')" class="flex items-center font-medium text-gray-700 uppercase tracking-wider">
-                            Author
-                            <svg class="w-4 h-4 ml-1" :class="{ 'transform rotate-180': sortField === 'author' && sortDirection === 'desc' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                    </th>
-                    <th class="px-6 py-3 text-left">
-                        <button @click="sortBy('created_at')" class="flex items-center font-medium text-gray-700 uppercase tracking-wider">
-                            Created At
-                            <svg class="w-4 h-4 ml-1" :class="{ 'transform rotate-180': sortField === 'created_at' && sortDirection === 'desc' }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                    </th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
+<div x-data="articleHandler" x-init="fetchArticles">
+    <table id="search-table">
+        <thead>
+            <tr class="">
+                <th class="flex items-center">
+                    <span class="flex items-center">
+                        Title
+                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                        </svg>
+                    </span>
+                </th>
+                <th>
+                    <span class="flex items-center">
+                        Author
+                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                        </svg>
+                    </span>
+                </th>
+                <th>
+                    <span class="flex items-center">
+                        Created at
+                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                        </svg>
+                    </span>
+                </th>
+                <th>
+                    <span class="flex items-center">
+                        Action
+                        <svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4"/>
+                        </svg>
+                    </span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
                 <template x-for="article in articles" :key="article.id">
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900" x-text="article.title"></div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900" x-text="article.author.name"></div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900" x-text="formatDate(article.created_at)"></div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="inline-flex rounded-md shadow-sm" role="group">
-                                <a :href="`/admin/articles/${article.id}`" class="px-3 py-1 text-sm font-medium text-white bg-blue-500 rounded-l-lg hover:bg-blue-600">
-                                    Show
-                                </a>
-                                <a :href="`/admin/articles/${article.id}/edit`" class="px-3 py-1 text-sm font-medium text-white bg-green-500 hover:bg-green-600">
-                                    Edit
-                                </a>
-                                <button @click="confirmDelete(article.id)" class="px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-r-lg hover:bg-red-600">
-                                    Delete
-                                </button>
-                            </div>
-                        </td>
+                    <tr>
+                        <td>hai</td>
+                        <td>aku</td>
+                        <td>now</td>
+                        <td>ngantuk</td>
                     </tr>
                 </template>
-                <tr x-show="articles.length === 0">
-                    <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
-                        No articles found
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <template x-if="articles.length > 0">
+                <template x-for="article in articles" :key="article.id">
+                    <tr>
+                        <td>hai</td>
+                        <td>aku</td>
+                        <td>now</td>
+                        <td>ngantuk</td>
+                    </tr>
+                </template>
+            </template>
+            <tr class="bg-white border-b hover:bg-gray-50">
+                <td x-text="articles.length" class="font-medium text-gray-900 whitespace-nowrap">hai</td>
+                <td>aku</td>
+                <td>now</td>
+                <td>ngantuk</td>
+            </tr>
 
-    <!-- Pagination -->
-    <div x-show="!loading && articles.length > 0" class="mt-4 flex items-center justify-between">
-        <div class="text-sm text-gray-700">
-            Showing <span x-text="meta.from"></span> to <span x-text="meta.to"></span> of <span x-text="meta.total"></span> articles
-        </div>
-        <div class="flex space-x-2">
-            <button 
-                @click="prevPage" 
-                :disabled="meta.current_page === 1"
-                class="px-3 py-1 border rounded"
-                :class="{ 'opacity-50 cursor-not-allowed': meta.current_page === 1 }"
-            >
-                Previous
-            </button>
-            <button 
-                @click="nextPage"
-                :disabled="meta.current_page >= meta.last_page"
-                class="px-3 py-1 border rounded"
-                :class="{ 'opacity-50 cursor-not-allowed': meta.current_page >= meta.last_page }"
-            >
-                Next
-            </button>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div x-show="showDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div class="p-6 text-center">
-                <svg class="mx-auto mb-4 w-12 h-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <h3 class="mb-5 text-lg font-normal text-gray-500">Are you sure you want to delete this article?</h3>
-                <div class="flex justify-center space-x-4">
-                    <button 
-                        @click="deleteArticle" 
-                        class="text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                    >
+                {{-- <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ Str::limit($article['title'], 110) }}
+                </td>
+                <td>
+                    {{ Str::limit($article->user->name, 20) }}
+                </td>
+                <td>{{ $article->created_at->diffForHumans() }}</td>
+                <td>
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                        <a href="{{ route('admin.article.show', $article->id) }}" type="button" class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-s-lg hover:bg-blue-600 focus:text-white dark:bg-blue-700 dark:text-white dark:hover:bg-blue-800 dark:focus:text-white">
+                        Show
+                        </a>
+                        <a href="{{ route('admin.article.update', $article->id) }}" type="button" class="px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:text-white dark:bg-green-700 dark:text-white dark:hover:bg-green-800 dark:focus:text-white">
+                        Edit
+                        </a>
+                        <button data-modal-target="delete-modal-{{ $article->id }}" data-modal-toggle="delete-modal-{{ $article->id }}" type="button" class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-e-lg hover:bg-red-600 focus:text-white dark:bg-red-700 dark:text-white dark:hover:bg-red-800 dark:focus:text-white">
                         Delete
-                    </button>
-                    <button 
-                        @click="showDeleteModal = false" 
-                        class="text-gray-500 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+                        </button>
+                        <div id="delete-modal-{{ $article->id }}" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-md max-h-full">
+                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-modal-{{ $article->id }}">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                    <div class="p-4 md:p-5 text-center">
+                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                        </svg>
+                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Apakah anda yakin akan menghapus artikel ini?</h3>
+                                        <form action="{{ route('admin.article.destroy', $article->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+                                            Delete
+                                            </button>
+                                        </form>
+                                        <button data-modal-hide="delete-modal-{{ $article->id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">No, cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr> --}}
+        </tbody>
+    </table>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('articleTable', () => ({
-        articles: [],
-        meta: {},
-        loading: false,
-        error: null,
-        searchQuery: '',
-        sortField: 'created_at',
-        sortDirection: 'desc',
-        showDeleteModal: false,
-        articleToDelete: null,
-
-        async fetchArticles() {
-            this.loading = true;
-            this.error = null;
-            
-            try {
-                const params = new URLSearchParams({
-                    page: this.meta.current_page || 1,
-                    search: this.searchQuery,
-                    sort_by: this.sortField,
-                    sort_dir: this.sortDirection
-                });
-                
-                const response = await axios.get(`/articles?${params}`);
-                
-                if (response.data.status === 'success') {
-                    this.articles = response.data.data;
-                    this.meta = response.data.meta || {};
-                } else {
-                    this.error = 'Failed to load articles';
+@push('script')
+    <script>
+        function articleHandler() {
+            return {
+                articles: [],
+                articleModal: false,
+                isLoading: false,
+                error: null,
+                message: null,
+                async fetchArticles() {
+                    this.isLoading = true;
+                    try {
+                        const response = await axios.get('/articles');
+                        console.log(response.data);
+                        this.articles = response.data.data; // Asumsikan API mengembalikan array objek sparing
+                        console.log(this.articles);
+                        console.log('Articles data:', JSON.parse(JSON.stringify(this.articles)));
+                    } catch (error) {
+                        console.error('Terjadi Kesalahan Di Server:', error);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                async createArtcle(articleId) {
+                    try {
+                        const response = await axios.post(`/articles/${articleId}/request`);
+                        console.log(response.data);
+                        this.fetchArticles(); // Refresh data sparing
+                        this.message = response.data.message || 'Permintaan sparing berhasil dikirim.';
+                    } catch (error) {
+                        console.error('Terjadi Kesalahan:', error);
+                        this.error = error.response.data.errors || 'Terjadi kesalahan saat mengirim permintaan sparing.'
+                    }
                 }
-            } catch (err) {
-                console.error('Error fetching articles:', err);
-                this.error = err.response?.data?.message || 'Error loading articles';
-            } finally {
-                this.loading = false;
             }
-        },
-
-        searchArticles() {
-            this.meta.current_page = 1;
-            this.fetchArticles();
-        },
-
-        sortBy(field) {
-            if (this.sortField === field) {
-                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                this.sortField = field;
-                this.sortDirection = 'asc';
-            }
-            this.fetchArticles();
-        },
-
-        prevPage() {
-            if (this.meta.current_page > 1) {
-                this.meta.current_page--;
-                this.fetchArticles();
-            }
-        },
-
-        nextPage() {
-            if (this.meta.current_page < this.meta.last_page) {
-                this.meta.current_page++;
-                this.fetchArticles();
-            }
-        },
-
-        confirmDelete(id) {
-            this.articleToDelete = id;
-            this.showDeleteModal = true;
-        },
-
-        async deleteArticle() {
-            try {
-                await axios.delete(`/articles/${this.articleToDelete}`);
-                this.showDeleteModal = false;
-                this.fetchArticles();
-            } catch (err) {
-                console.error('Error deleting article:', err);
-                this.error = err.response?.data?.message || 'Error deleting article';
-            }
-        },
-
-        formatDate(dateString) {
-            if (!dateString) return '';
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
         }
-    }));
-});
-</script>
+    </script>
 @endpush

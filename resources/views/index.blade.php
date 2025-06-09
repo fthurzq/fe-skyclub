@@ -357,8 +357,9 @@
             </div>
         </div>
     </div>
-
-    <script>
+@endsection
+@push('script')
+<script>
         function sparingHandler() {
             return {
                 sparings: [],
@@ -379,10 +380,7 @@
                 }
             }
         }
-    </script>
-@endsection
-@push('script')
-    <script>
+
         function carousel() {
             return {
                 currentSlide: 0,

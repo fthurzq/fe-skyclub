@@ -61,7 +61,7 @@
                                         class="relative flex max-w-xs items-center rounded-full text-sm "
                                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span class="sr-only">Open user menu</span>
-                                        <img class="h-8 w-8 rounded-full"
+                                        <img class="h-8 w-8 rounded-full" 
                                             :src="`http://127.0.0.1:8000/storage/${user.data.profile_photo}`"
                                             alt="">
                                         <span class="ml-2 font-semibold hover:text-red-600"
@@ -81,8 +81,6 @@
                                     <a :href="user.data.role == 'admin' ? '/admin' : '/users/profile-user'"
                                         class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                                         id="user-menu-item-0" x-show="user.authenticated">Your Profile</a>
-
-
 
                                     <form method="POST" id="logout" x-data="logoutHandler()"
                                         @submit.prevent="$store.user.clearUser(); window.location.href = '/'">
